@@ -58,7 +58,7 @@ export default function OrderPage() {
     return encodeURIComponent(message)
   }
 
-  const whatsappNumber = "59897308696"
+  const whatsappNumber = "598098190425"
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${generateWhatsAppMessage()}`
 
   const isFormValid = customerInfo.name && customerInfo.phone && customerInfo.address
