@@ -115,7 +115,7 @@ export const menuItems = {
       id: "fanta-1500",
       name: "Fanta 1.5L",
       description: "Tamaño familiar",
-      price: 150,
+      price: 180,
       image: "/fanta-orange-bottle-1-5-liter.jpg",
     },
   ],

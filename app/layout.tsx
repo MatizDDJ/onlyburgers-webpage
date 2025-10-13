@@ -16,9 +16,8 @@ const bebasNeue = Bebas_Neue({
 })
 
 export const metadata: Metadata = {
-  title: "ONLY BURGERS - Las Mejores Hamburguesas de Uruguay",
+  title: "ONLY BURGUERS - Las Mejores Hamburguesas de Uruguay",
   description: "Hamburguesas gourmet premium con ingredientes de primera calidad",
-    generator: 'v0.app'
 }
 
 export default function RootLayout({

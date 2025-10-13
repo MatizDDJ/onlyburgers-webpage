@@ -22,9 +22,7 @@ export default function OrderPage() {
   })
   const [paymentMethod, setPaymentMethod] = useState<"efectivo" | "transferencia">("efectivo")
 
-  const deliveryFee = 150
-  const tax = total * 0.22
-  const grandTotal = total + deliveryFee + tax
+  const grandTotal = total 
 
   const generateWhatsAppMessage = () => {
     let message = "🍔 *PEDIDO ONLY BURGERS*\n\n"
@@ -43,8 +41,7 @@ export default function OrderPage() {
 
     message += `📦 *RESUMEN*\n`
     message += `Subtotal: $U ${total.toFixed(2)}\n`
-    message += `Envío: $U ${deliveryFee}\n`
-    message += `IVA (22%): $U ${Math.round(tax)}\n`
+    message += `Envio *GRATIS*\n`
     message += `*TOTAL: $U ${Math.round(grandTotal)}*\n\n`
 
     message += `💳 *MÉTODO DE PAGO*\n`
@@ -275,11 +272,10 @@ export default function OrderPage() {
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Costo de Envío</span>
-                      <span className="font-medium">$U {deliveryFee}</span>
+                      <span className="font-medium text-emerald-700">GRATIS</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">IVA (22%)</span>
-                      <span className="font-medium">$U {Math.round(tax)}</span>
+
                     </div>
                   </div>
                   <Separator />

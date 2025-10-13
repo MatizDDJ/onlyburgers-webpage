@@ -54,14 +54,8 @@ export function Footer() {
           <div className="space-y-4">
             <h3 className="font-semibold">Síguenos</h3>
             <nav className="flex flex-col gap-2 text-sm">
-              <Link href="#" className="text-accent-foreground/80 hover:text-accent-foreground transition-colors">
+              <Link href="https://www.instagram.com/onlyburguers_ff/" className="text-accent-foreground/80 hover:text-accent-foreground transition-colors">
                 Instagram
-              </Link>
-              <Link href="#" className="text-accent-foreground/80 hover:text-accent-foreground transition-colors">
-                Facebook
-              </Link>
-              <Link href="#" className="text-accent-foreground/80 hover:text-accent-foreground transition-colors">
-                Twitter
               </Link>
             </nav>
           </div>
