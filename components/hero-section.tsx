@@ -47,8 +47,8 @@ export function HeroSection() {
               />
             </div>
             <div className="absolute -bottom-6 -left-6 bg-primary text-primary-foreground rounded-2xl p-6 shadow-xl z-10">
-              <div className="text-3xl font-bold">4.9★</div>
-              <div className="text-sm opacity-90">+2,500 Reseñas</div>
+              <div className="text-3xl font-bold">4.7★</div>
+              <div className="text-sm opacity-90">+300 Reseñas</div>
             </div>
           </div>
         </div>

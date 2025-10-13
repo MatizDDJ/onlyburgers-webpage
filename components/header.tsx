@@ -15,7 +15,7 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2">
           <div className="text-2xl font-bold text-primary tracking-tight font-[family-name:var(--font-display)]">
-            ONLY BURGERS
+            ONLY BURGUERS
           </div>
         </Link>
 
