@@ -11,54 +11,93 @@ import { useState } from "react"
 export const menuItems = {
   hamburguesas: [
     {
-      id: "classic-cheeseburger",
-      name: "Hamburguesa Clásica con Queso",
-      description: "Carne Angus, queso cheddar añejo, lechuga, tomate, salsa especial",
-      price: 450,
+      id: "burguer-classic",
+      name: "Burguer Classic",
+      description: "Una carne smash, dos fetas de queso cheddar, panceta ahumada",
+      price: 180,
       image: "/classic-cheeseburger-with-melted-cheese.jpg",
       popular: true,
     },
     {
-      id: "bbq-bacon-burger",
-      name: "Hamburguesa BBQ con Tocino Doble",
-      description: "Doble carne, tocino crujiente, salsa BBQ, aros de cebolla, queso pepper jack",
-      price: 590,
+      id: "special-burguer",
+      name: "Special Burguer",
+      description: "Doble carne smash, tres fetas de queso cheddar, panceta ahumada",
+      price: 250,
       image: "/bbq-bacon-burger.jpg",
       popular: true,
       includesFries: true,
     },
     {
-      id: "mushroom-swiss",
-      name: "Hamburguesa Suiza con Champiñones",
-      description: "Champiñones salteados, queso suizo, cebollas caramelizadas, aioli de trufa",
-      price: 520,
+      id: "burguer-only",
+      name: "Burguer Only",
+      description: "Triple carnes smash, cuatro fetas de cheddar, panceta ahumada",
+      price: 290,
       image: "/mushroom-swiss-burger-gourmet.jpg",
       popular: false,
+      includesFries: true,
     },
     {
-      id: "spicy-jalapeno",
-      name: "Hamburguesa Picante Jalapeño",
-      description: "Queso pepper jack, jalapeños, mayonesa chipotle, cebollas crujientes",
-      price: 480,
+      id: "burguer-bunker",
+      name: "Burguer Bunker",
+      description: "Doble carne smash, cuatro fetas de queso cheddar, panceta ahumada, cebolla caramelizada",
+      price: 290,
       image: "/spicy-jalapeno-burger-with-peppers.jpg",
       popular: false,
+      includesFries: true,
     },
     {
-      id: "veggie-delight",
-      name: "Delicia Vegetariana",
-      description: "Hamburguesa vegetal casera, aguacate, brotes, hummus, pan integral",
-      price: 420,
+      id: "burguer-simple",
+      name: "Burguer Simple",
+      description: "Doble carne smash, dos fetas de muzzarella, lechuga, tomate",
+      price: 280,
       image: "/gourmet-veggie-burger-with-avocado.jpg",
       popular: false,
+      includesFries: true,
     },
     {
-      id: "the-ultimate",
-      name: "La Suprema Triple",
-      description: "Triple carne, tocino, tres quesos, huevo frito, todos los complementos",
-      price: 720,
+      id: "burguer-new",
+      name: "Burguer New",
+      description: "Doble carne smash, jamon, muzarrella, papitas pay, cheddar",
+      price: 290,
       image: "/ultimate-triple-burger-stacked-high.jpg",
       popular: true,
       includesFries: true,
+    },
+      {
+      id: "burguer-especialidad",
+      name: "Burguer Especialidad de la Casa",
+      description: "Triple carne smash, tres fetas de queso cheddar, muzzarella, panceta ahumada, lechuga, tomate",
+      price: 320,
+      image: "/ultimate-triple-burger-stacked-high.jpg",
+      popular: true,
+      includesFries: true,
+    },
+             {
+      id: "burguer-quintuple",
+      name: "Burguer Super Quintuple",
+      description: "Cinco carnes smash, cinco fetas de queso cheddar, extra panceta, lechuga, tomate, cebolla blanca",
+      price: 550,
+      image: "/ultimate-triple-burger-stacked-high.jpg",
+      popular: false,
+      includesFries: true,
+    },
+         {
+      id: "burguer-veggie1",
+      name: "Burguer Veggie boniato y zanahoria",
+      description: "Una burguer de boniato y zanahoria, queso cheddar, lechuga, tomate",
+      price: 320,
+      image: "/ultimate-triple-burger-stacked-high.jpg",
+      popular: false,
+      includesFries: false,
+    },
+           {
+      id: "burguer-veggie2",
+      name: "Burguer Veggie espinaca y puerro",
+      description: "Una burguer de espinaca y puerro, muzzarella, lechuga, tomate",
+      price: 320,
+      image: "/ultimate-triple-burger-stacked-high.jpg",
+      popular: false,
+      includesFries: false,
     },
   ],
   bebidas: [
@@ -121,30 +160,60 @@ export const menuItems = {
   ],
   milanesas: [
     {
-      id: "milanesa-clasica",
-      name: "Milanesa Clásica",
-      description: "Milanesa de carne empanizada, servida con papas fritas",
+      id: "milanesa-bunker",
+      name: "Milanesa Bunker",
+      description: "una supermila de carne o pollo, cuatro fetas de queso cheddar, cebolla caramelizada, extra panceta ahumada",
       price: 380,
       image: "/breaded-beef-milanesa-with-fries.jpg",
     },
     {
-      id: "milanesa-napolitana",
-      name: "Milanesa Napolitana",
-      description: "Milanesa con jamón, queso y salsa de tomate",
-      price: 450,
+      id: "milanesa-simple",
+      name: "Milanesa Simple",
+      description: "Una supermila de carne o pollo, extra muzzarella, lechuga, tomate",
+      price: 380,
       image: "/milanesa-napolitana-with-cheese-and-ham.jpg",
     },
     {
-      id: "milanesa-pollo",
-      name: "Milanesa de Pollo",
-      description: "Pechuga de pollo empanizada, servida con papas fritas",
-      price: 360,
+      id: "milanesa-new",
+      name: "Milanesa New",
+      description: "Una super mila de carne o pollo, cuatro fetas de queso cheddar, jamon, muzzarella, lluvia de papitas pay",
+      price: 380,
+      image: "/breaded-chicken-milanesa-with-fries.jpg",
+    },
+       {
+      id: "milanesa-especialidad",
+      name: "Milanesa Especialidad de la Casa",
+      description: "Una supermila de carne o pollo, seis fetas de queso cheddar, extra muzzarella, panceta ahumada sofritada, lechuga, tomate",
+      price: 420,
       image: "/breaded-chicken-milanesa-with-fries.jpg",
     },
   ],
   papas: [
     {
       id: "papas-clasicas",
+      name: "Papas Fritas Clásicas",
+      description: "Porción grande de papas fritas crujientes",
+      price: 180,
+      image: "/crispy-french-fries-portion.jpg",
+    },
+    {
+      id: "papas-cheddar",
+      name: "Papas con Cheddar y Bacon",
+      description: "Papas fritas con queso cheddar derretido y bacon",
+      price: 250,
+      image: "/loaded-fries-with-cheddar-and-bacon.jpg",
+    },
+    {
+      id: "papas-rusticas",
+      name: "Papas Rústicas",
+      description: "Papas con piel, especias y hierbas",
+      price: 200,
+      image: "/rustic-potato-wedges-with-herbs.jpg",
+    },
+  ],
+  promos: [
+    {
+      id: "promo-familiar",
       name: "Papas Fritas Clásicas",
       description: "Porción grande de papas fritas crujientes",
       price: 180,
@@ -241,11 +310,11 @@ export function MenuSection() {
             NUESTRO MENÚ
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed">
-            Descubre nuestra selección de hamburguesas gourmet, bebidas refrescantes y acompañamientos deliciosos
+            Descubre nuestra selección de hamburguesas, milanesas, bebidas refrescantes y acompañamientos deliciosos
           </p>
           <div className="bg-primary/10 border-2 border-primary rounded-lg p-4 max-w-3xl mx-auto mt-6">
             <p className="text-base font-semibold text-primary">
-              🍟 ¡PROMO ESPECIAL! Todas las hamburguesas dobles y triples incluyen porción de papas fritas GRATIS
+              🍟 ¡PROMO ESPECIAL! Todas las hamburguesas de mas de dos carnes y milanesas incluyen porción de papas fritas GRATIS
             </p>
           </div>
         </div>
