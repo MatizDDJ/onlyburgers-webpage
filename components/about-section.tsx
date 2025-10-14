@@ -15,18 +15,18 @@ export function AboutSection() {
 
           <div className="space-y-6">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl text-balance font-[family-name:var(--font-display)]">
-              MAESTRÍA EN EL ARTE DE LA HAMBURGUESA
+              PASIÓN POR LA HAMBURGUESA PERFECTA
             </h2>
             <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
               <p className="text-pretty">
-                Desde 2015, ONLY BURGERS ha redefinido el concepto de hamburguesa gourmet en Uruguay. Seleccionamos
-                cuidadosamente cada ingrediente, trabajando con productores locales para garantizar la máxima calidad y
-                frescura en cada preparación.
+              en ONLY BURGUERS transformamos lo simple en extraordinario. 
+              Trabajamos con ingredientes frescos de productores locales, 
+              elegidos uno por uno para garantizar sabor, calidad y autenticidad en cada bocado.
               </p>
               <p className="text-pretty">
-                Nuestra carne se muele diariamente, nuestros panes se hornean en casa cada mañana, y cada elemento se
-                selecciona con precisión para crear una experiencia gastronómica excepcional. Creemos que una gran
-                hamburguesa es el resultado de la pasión, la técnica y los mejores ingredientes.
+                Nuestra carne se prepara cada día, 
+                los panes se hornean en casa y cada detalle se cuida al milímetro. 
+                No hacemos hamburguesas comunes: creamos experiencias que despiertan los sentidos y te hacen volver por más.
               </p>
             </div>
 
@@ -36,11 +36,11 @@ export function AboutSection() {
                 <div className="text-sm text-muted-foreground">Carne Premium</div>
               </div>
               <div className="space-y-2">
-                <div className="text-3xl font-bold text-primary">10+</div>
-                <div className="text-sm text-muted-foreground">Años de Experiencia</div>
+                <div className="text-3xl font-bold text-primary">Delivery</div>
+                <div className="text-sm text-muted-foreground">Extra rápido</div>
               </div>
               <div className="space-y-2">
-                <div className="text-3xl font-bold text-primary">50K+</div>
+                <div className="text-3xl font-bold text-primary">Muchisimos</div>
                 <div className="text-sm text-muted-foreground">Clientes Satisfechos</div>
               </div>
             </div>
