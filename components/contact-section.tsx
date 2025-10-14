@@ -3,9 +3,9 @@ import { Card, CardContent } from "@/components/ui/card"
 import { MapPin, Clock, MessageCircle } from "lucide-react"
 
 export function ContactSection() {
-  const whatsappNumber = "59899123456" // Replace with actual number
+  const whatsappNumber = "598098190425" // Replace with actual number
   const whatsappMessage = encodeURIComponent(
-    "¡Hola ONLY BURGERS! Me gustaría hacer una consulta sobre sus hamburguesas.",
+    "¡Hola ONLY BURGUERS! Me gustaría hacer una consulta sobre sus hamburguesas.",
   )
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`
 
@@ -29,7 +29,7 @@ export function ContactSection() {
               </div>
               <h3 className="font-semibold text-lg">Ubicación</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Montevideo, Uruguay
+                Colonia, Uruguay
                 <br />
                 Zona Centro
               </p>
@@ -43,7 +43,7 @@ export function ContactSection() {
               </div>
               <h3 className="font-semibold text-lg">WhatsApp</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                +598 99 123 456
+                +598 98 190 425
                 <br />
                 Pedidos y consultas
               </p>
