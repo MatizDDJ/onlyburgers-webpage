@@ -8,7 +8,7 @@ export function Footer() {
           <div className="space-y-4">
             <div className="text-2xl font-bold tracking-tight font-[family-name:var(--font-display)]">ONLY BURGERS</div>
             <p className="text-sm text-accent-foreground/80 leading-relaxed">
-              Maestría en hamburguesas gourmet desde 2015.
+              Maestría en hamburguesas.
             </p>
           </div>
 
@@ -20,12 +20,6 @@ export function Footer() {
               </Link>
               <Link href="#about" className="text-accent-foreground/80 hover:text-accent-foreground transition-colors">
                 Nosotros
-              </Link>
-              <Link
-                href="#testimonials"
-                className="text-accent-foreground/80 hover:text-accent-foreground transition-colors"
-              >
-                Reseñas
               </Link>
               <Link
                 href="#contact"
@@ -62,7 +56,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 pt-8 border-t border-accent-foreground/10 text-center text-sm text-accent-foreground/60">
-          <p>© 2025 ONLY BURGERS. Todos los derechos reservados.</p>
+          <p>© 2025 ONLY BURGUERS. Todos los derechos reservados.</p>
         </div>
       </div>
     </footer>
