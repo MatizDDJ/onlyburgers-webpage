@@ -20,19 +20,10 @@ export function HeroSection() {
               hamburguesa es una obra maestra culinaria diseñada para los verdaderos amantes del sabor.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/order">
-                <Button size="lg" className="text-base shadow-xl hover:shadow-2xl transition-shadow w-full sm:w-auto">
-                  Ordenar en Línea
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
               <Link href="/#menu">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="text-base bg-transparent border-accent-foreground/20 hover:bg-accent-foreground/10 text-accent-foreground w-full sm:w-auto"
-                >
+                <Button size="lg" className="text-base shadow-xl hover:shadow-2xl transition-shadow w-full sm:w-auto">
                   Ver Menú
+                  <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
             </div>
