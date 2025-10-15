@@ -335,28 +335,40 @@ export function MenuSection() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="hamburguesas" className="space-y-6">
+          <TabsContent 
+            value="hamburguesas" 
+            className="space-y-6 animate-in fade-in-0 duration-300"
+          >
             <h3 className="text-2xl font-bold text-center mb-6 font-[family-name:var(--font-display)]">
               NUESTRAS HAMBURGUESAS
             </h3>
             {renderMenuItems(menuItems.hamburguesas)}
           </TabsContent>
 
-          <TabsContent value="bebidas" className="space-y-6">
+          <TabsContent 
+            value="bebidas" 
+            className="space-y-6 animate-in fade-in-0 duration-300"
+          >
             <h3 className="text-2xl font-bold text-center mb-6 font-[family-name:var(--font-display)]">
               NUESTRAS BEBIDAS
             </h3>
             {renderMenuItems(menuItems.bebidas)}
           </TabsContent>
 
-          <TabsContent value="milanesas" className="space-y-6">
+          <TabsContent 
+            value="milanesas" 
+            className="space-y-6 animate-in fade-in-0 duration-300"
+          >
             <h3 className="text-2xl font-bold text-center mb-6 font-[family-name:var(--font-display)]">
               NUESTRAS MILANESAS
             </h3>
             {renderMenuItems(menuItems.milanesas)}
           </TabsContent>
 
-          <TabsContent value="papas" className="space-y-6">
+          <TabsContent 
+            value="papas" 
+            className="space-y-6 animate-in fade-in-0 duration-300"
+          >
             <h3 className="text-2xl font-bold text-center mb-6 font-[family-name:var(--font-display)]">
               NUESTRAS PAPAS FRITAS
             </h3>
