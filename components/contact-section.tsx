@@ -80,7 +80,7 @@ export function ContactSection() {
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Lun-Dom
                 <br />
-                11:00 AM - 10:00 PM
+                20:00 PM - 01:00 AM
               </p>
             </CardContent>
           </Card>
