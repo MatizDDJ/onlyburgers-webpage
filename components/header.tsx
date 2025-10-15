@@ -35,9 +35,6 @@ export function Header() {
             <Link href="/#about" className="text-sm font-medium hover:text-primary transition-colors">
               Nosotros
             </Link>
-            <Link href="/#testimonials" className="text-sm font-medium hover:text-primary transition-colors">
-              Reseñas
-            </Link>
             <Link href="/#contact" className="text-sm font-medium hover:text-primary transition-colors">
               Contacto
             </Link>
