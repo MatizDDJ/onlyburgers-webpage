@@ -8,10 +8,12 @@ export default function MenuPage() {
   return (
     <main className="min-h-screen w-full">
       <Header />
-      <div className="py-8">
-        <MenuSection />
+      <div className="pt-16">
+        <div className="py-8">
+          <MenuSection />
+        </div>
+        <Footer />
       </div>
-      <Footer />
     </main>
   )
 }

@@ -119,11 +119,26 @@
   }
   html {
     @apply w-full;
+    /* Prevenir que los navegadores móviles oculten/muestren UI */
+    position: relative;
+    overflow-x: hidden;
   }
   body {
     @apply bg-background text-foreground w-full;
     margin: 0;
     padding: 0;
+    /* Prevenir el bounce en iOS */
+    overscroll-behavior-y: none;
+  }
+  
+  /* Asegurar que el header siempre esté fijo en móviles */
+  header {
+    position: fixed !important;
+    top: 0 !important;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
 }
 

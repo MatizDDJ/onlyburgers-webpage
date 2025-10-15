@@ -11,7 +11,15 @@ export function Header() {
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0)
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header 
+      className="fixed top-0 left-0 right-0 z-[9999] w-full border-b border-border/40 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 shadow-sm"
+      style={{
+        WebkitBackfaceVisibility: 'hidden',
+        backfaceVisibility: 'hidden',
+        WebkitTransform: 'translateZ(0)',
+        transform: 'translateZ(0)',
+      }}
+    >
       <div className="container mx-auto max-w-7xl flex h-16 items-center justify-between px-4 md:px-6">
         <Link href="/" className="flex-1">
           <div className="text-2xl font-bold text-primary tracking-tight font-[family-name:var(--font-display)]">

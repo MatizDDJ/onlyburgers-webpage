@@ -91,7 +91,7 @@ export default function OrderPage() {
   return (
     <main className="min-h-screen flex flex-col">
       <Header />
-      <div className="flex-1 py-8 md:py-12 bg-secondary/20">
+      <div className="flex-1 py-8 md:py-12 bg-secondary/20 pt-24">
         <div className="container px-4">
           <div className="mb-6">
             <Link

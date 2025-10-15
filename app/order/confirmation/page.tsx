@@ -51,7 +51,7 @@ export default function ConfirmationPage() {
   return (
     <main className="min-h-screen flex flex-col">
       <Header />
-      <div className="flex-1 py-12 md:py-16 bg-secondary/20">
+      <div className="flex-1 py-12 md:py-16 bg-secondary/20 pt-24">
         <div className="container px-4 max-w-3xl">
           {/* Success Message */}
           <div className="text-center mb-8">
