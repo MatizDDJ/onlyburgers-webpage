@@ -7,7 +7,26 @@ import { useEffect, useState } from "react"
 
 export function HeroSection() {
   const [visibleWords, setVisibleWords] = useState(0)
+  const [isOpen, setIsOpen] = useState(false)
   const words = ["LA", "PERFECCIÓN", "EN", "CADA", "HAMBURGUESA"]
+
+  // Verificar si el restaurante está abierto (20:00 a 01:00)
+  useEffect(() => {
+    const checkIfOpen = () => {
+      const now = new Date()
+      const hour = now.getHours()
+      // Abierto de 20:00 (8 PM) a 01:00 (1 AM)
+      // Si es entre 20:00 y 23:59 O entre 00:00 y 01:00
+      const open = hour >= 20 || hour < 1
+      setIsOpen(open)
+    }
+
+    checkIfOpen()
+    // Verificar cada minuto si cambió el estado
+    const interval = setInterval(checkIfOpen, 60000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -34,13 +53,22 @@ export function HeroSection() {
       <div className="container mx-auto px-4 py-32 md:py-40 lg:py-48 relative max-w-7xl">
         <div className="grid gap-16 lg:grid-cols-2 lg:gap-20 items-center">
           <div className="space-y-10">
-            <div className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow-2xl animate-bounce-slow relative">
-              <div className="relative">
-                <div className="w-3 h-3 bg-green-400 rounded-full animate-ping" />
-                <div className="absolute inset-0 w-3 h-3 bg-green-400 rounded-full" />
+            {isOpen ? (
+              <div className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow-2xl animate-bounce-slow relative">
+                <div className="relative">
+                  <div className="w-3 h-3 bg-green-400 rounded-full animate-ping" />
+                  <div className="absolute inset-0 w-3 h-3 bg-green-400 rounded-full" />
+                </div>
+                Entregas Disponibles
               </div>
-              Entregas Disponibles
-            </div>
+            ) : (
+              <div className="inline-flex items-center gap-2 rounded-full bg-muted px-5 py-2 text-sm font-semibold text-muted-foreground shadow-2xl relative">
+                <div className="relative">
+                  <div className="w-3 h-3 bg-red-500 rounded-full" />
+                </div>
+                Estamos Cerrados
+              </div>
+            )}
             
             <h1 className="text-5xl font-bold tracking-tight sm:text-6xl md:text-7xl lg:text-8xl font-[family-name:var(--font-display)] leading-tight">
               {words.map((word, index) => (

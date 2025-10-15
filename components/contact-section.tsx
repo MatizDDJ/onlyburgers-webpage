@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { MapPin, Clock, MessageCircle } from "lucide-react"
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer"
+import { useEffect, useState } from "react"
 
 export function ContactSection() {
   const whatsappNumber = "598098190425" // Replace with actual number
@@ -15,6 +16,23 @@ export function ContactSection() {
   const { elementRef: titleRef, isVisible: titleVisible } = useIntersectionObserver({ threshold: 0.2 })
   const { elementRef: cardsRef, isVisible: cardsVisible } = useIntersectionObserver({ threshold: 0.1 })
   const { elementRef: buttonRef, isVisible: buttonVisible } = useIntersectionObserver({ threshold: 0.2 })
+
+  const [isOpen, setIsOpen] = useState(false)
+
+  // Verificar si el restaurante está abierto (20:00 a 01:00)
+  useEffect(() => {
+    const checkIfOpen = () => {
+      const now = new Date()
+      const hour = now.getHours()
+      const open = hour >= 20 || hour < 1
+      setIsOpen(open)
+    }
+
+    checkIfOpen()
+    const interval = setInterval(checkIfOpen, 60000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <section id="contact" className="py-20 md:py-28 bg-muted/50 w-full">
@@ -82,6 +100,12 @@ export function ContactSection() {
                 <br />
                 20:00 PM - 01:00 AM
               </p>
+              <div className="flex items-center justify-center gap-2 mt-3">
+                <div className={`w-2 h-2 rounded-full ${isOpen ? 'bg-green-500' : 'bg-red-500'}`} />
+                <span className={`text-xs font-semibold ${isOpen ? 'text-green-600' : 'text-red-600'}`}>
+                  {isOpen ? 'Abierto ahora' : 'Cerrado ahora'}
+                </span>
+              </div>
             </CardContent>
           </Card>
         </div>
