@@ -59,8 +59,8 @@ export function AboutSection() {
                 <div className="text-sm text-muted-foreground">Carne Premium</div>
               </div>
               <div className="space-y-2">
-                <div className="text-3xl font-bold text-primary">Delivery</div>
-                <div className="text-sm text-muted-foreground">Extra rápido</div>
+                <div className="text-3xl font-bold text-primary">30-45'</div>
+                <div className="text-sm text-muted-foreground">Preparación rápida</div>
               </div>
               <div className="space-y-2">
                 <div className="text-3xl font-bold text-primary">+100</div>
