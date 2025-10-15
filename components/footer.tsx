@@ -33,13 +33,13 @@ export function Footer() {
           <div className="space-y-4">
             <h3 className="font-semibold">Legal</h3>
             <nav className="flex flex-col gap-2 text-sm">
-              <Link href="#" className="text-accent-foreground/80 hover:text-accent-foreground transition-colors">
+              <Link href="/privacy" className="text-accent-foreground/80 hover:text-accent-foreground transition-colors">
                 Política de Privacidad
               </Link>
-              <Link href="#" className="text-accent-foreground/80 hover:text-accent-foreground transition-colors">
-                Términos de Servicio
+              <Link href="/terms" className="text-accent-foreground/80 hover:text-accent-foreground transition-colors">
+                Términos y Condiciones
               </Link>
-              <Link href="#" className="text-accent-foreground/80 hover:text-accent-foreground transition-colors">
+              <Link href="/allergens" className="text-accent-foreground/80 hover:text-accent-foreground transition-colors">
                 Info de Alérgenos
               </Link>
             </nav>
