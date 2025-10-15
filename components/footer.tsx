@@ -2,8 +2,8 @@ import Link from "next/link"
 
 export function Footer() {
   return (
-    <footer className="border-t bg-accent text-accent-foreground">
-      <div className="container px-4 py-12">
+    <footer className="border-t bg-accent text-accent-foreground w-full">
+      <div className="container mx-auto max-w-7xl px-4 py-12">
         <div className="grid gap-8 md:grid-cols-4">
           <div className="space-y-4">
             <div className="text-2xl font-bold tracking-tight font-[family-name:var(--font-display)]">ONLY BURGERS</div>
@@ -15,14 +15,14 @@ export function Footer() {
           <div className="space-y-4">
             <h3 className="font-semibold">Enlaces Rápidos</h3>
             <nav className="flex flex-col gap-2 text-sm">
-              <Link href="#menu" className="text-accent-foreground/80 hover:text-accent-foreground transition-colors">
+              <Link href="/menu" className="text-accent-foreground/80 hover:text-accent-foreground transition-colors">
                 Menú
               </Link>
-              <Link href="#about" className="text-accent-foreground/80 hover:text-accent-foreground transition-colors">
+              <Link href="/#about" className="text-accent-foreground/80 hover:text-accent-foreground transition-colors">
                 Nosotros
               </Link>
               <Link
-                href="#contact"
+                href="/#contact"
                 className="text-accent-foreground/80 hover:text-accent-foreground transition-colors"
               >
                 Contacto

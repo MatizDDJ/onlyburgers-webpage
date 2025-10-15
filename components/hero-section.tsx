@@ -1,45 +1,100 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Star } from "lucide-react"
 import Link from "next/link"
+import { useEffect, useState } from "react"
 
 export function HeroSection() {
+  const [visibleWords, setVisibleWords] = useState(0)
+  const words = ["LA", "PERFECCIÓN", "EN", "CADA", "HAMBURGUESA"]
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setVisibleWords((prev) => {
+        if (prev < words.length) {
+          return prev + 1
+        }
+        clearInterval(timer)
+        return prev
+      })
+    }, 200) // Cada palabra aparece cada 200ms
+
+    return () => clearInterval(timer)
+  }, [])
+
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-accent via-accent to-accent/90 text-accent-foreground">
+    <section className="relative overflow-hidden bg-gradient-to-br from-accent via-accent to-accent/90 text-accent-foreground w-full min-h-[90vh] flex items-center">
       <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-[0.03]" />
-      <div className="container px-4 py-24 md:py-32 lg:py-40 relative">
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center">
-          <div className="space-y-8">
-            <div className="inline-block rounded-full bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground shadow-lg animate-pulse">
+      
+      {/* Decorative background elements */}
+      <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-blob" />
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/20 rounded-full blur-3xl animate-blob animation-delay-2000" />
+      
+      <div className="container mx-auto px-4 py-32 md:py-40 lg:py-48 relative max-w-7xl">
+        <div className="grid gap-16 lg:grid-cols-2 lg:gap-20 items-center">
+          <div className="space-y-10">
+            <div className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow-2xl animate-bounce-slow relative">
+              <div className="relative">
+                <div className="w-3 h-3 bg-green-400 rounded-full animate-ping" />
+                <div className="absolute inset-0 w-3 h-3 bg-green-400 rounded-full" />
+              </div>
               Entregas Disponibles
             </div>
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl text-balance font-[family-name:var(--font-display)]">
-              LA PERFECCIÓN EN CADA HAMBURGUESA
+            
+            <h1 className="text-5xl font-bold tracking-tight sm:text-6xl md:text-7xl lg:text-8xl font-[family-name:var(--font-display)] leading-tight">
+              {words.map((word, index) => (
+                <span
+                  key={index}
+                  className={`inline-block mr-4 transition-all duration-700 ${
+                    index < visibleWords
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-12"
+                  }`}
+                  style={{
+                    transitionDelay: `${index * 100}ms`,
+                  }}
+                >
+                  {word}
+                </span>
+              ))}
             </h1>
-            <p className="text-lg text-accent-foreground/90 max-w-xl text-pretty leading-relaxed">
+            
+            <p className="text-xl text-accent-foreground/90 max-w-xl leading-relaxed animate-fadeIn animation-delay-1800 opacity-0">
               Carne premium seleccionada, ingredientes frescos de primera calidad y técnicas de cocción perfectas. Cada
               hamburguesa es una obra maestra culinaria diseñada para los verdaderos amantes del sabor.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/#menu">
-                <Button size="lg" className="text-base shadow-xl hover:shadow-2xl transition-shadow w-full sm:w-auto">
+            
+            <div className="flex flex-col sm:flex-row gap-4 animate-fadeIn animation-delay-2500 opacity-0">
+              <Link href="/menu">
+                <Button size="lg" className="text-lg px-8 py-6 shadow-2xl hover:shadow-accent/50 hover:scale-105 transition-all duration-300 w-full sm:w-auto">
                   Ver Menú
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  <ArrowRight className="ml-2 h-6 w-6" />
                 </Button>
               </Link>
             </div>
           </div>
 
-          <div className="relative burger-overflow">
-            <div className="aspect-square rounded-2xl overflow-visible bg-transparent">
+          <div className="relative burger-overflow animate-fadeIn animation-delay-500">
+            <div className="aspect-square rounded-3xl overflow-visible bg-transparent relative">
               <img
                 src="/delicious-gourmet-burger-with-melted-cheese-and-fr.jpg"
                 alt="Hamburguesa Signature"
-                className="object-cover w-full h-full rounded-2xl"
+                className="object-cover w-full h-full rounded-3xl hover:scale-105 transition-transform duration-500 shadow-2xl"
               />
+              
+              {/* Animated glow effect */}
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-primary/20 to-transparent animate-pulse-slow" />
             </div>
-            <div className="absolute -bottom-6 -left-6 bg-primary text-primary-foreground rounded-2xl p-6 shadow-xl z-10">
-              <div className="text-3xl font-bold">4.7★</div>
-              <div className="text-sm opacity-90">+300 Reseñas</div>
+            
+            {/* Enhanced rating card with animations */}
+            <div className="absolute -bottom-8 -left-8 bg-gradient-to-br from-primary via-primary to-primary/90 text-primary-foreground rounded-3xl p-8 shadow-2xl z-10 animate-float border-4 border-white/20 backdrop-blur-sm hover:scale-110 transition-transform duration-300 cursor-pointer">
+              <div className="flex items-center gap-2 mb-2">
+                <Star className="h-8 w-8 fill-yellow-300 text-yellow-300 animate-spin-slow" />
+                <div className="text-5xl font-bold">4.7</div>
+              </div>
+              <div className="text-base font-semibold opacity-95">+300 Reseñas</div>
+              <div className="absolute -top-2 -right-2 text-2xl animate-bounce-slow">🚀</div>
             </div>
           </div>
         </div>

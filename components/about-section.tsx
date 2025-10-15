@@ -1,9 +1,22 @@
+"use client"
+
+import { useIntersectionObserver } from "@/hooks/use-intersection-observer"
+
 export function AboutSection() {
+  const { elementRef: imageRef, isVisible: imageVisible } = useIntersectionObserver({ threshold: 0.2 })
+  const { elementRef: contentRef, isVisible: contentVisible } = useIntersectionObserver({ threshold: 0.2 })
+  const { elementRef: statsRef, isVisible: statsVisible } = useIntersectionObserver({ threshold: 0.2 })
+
   return (
-    <section id="about" className="py-20 md:py-28 bg-muted/50">
-      <div className="container px-4">
+    <section id="about" className="py-20 md:py-28 bg-muted/50 w-full">
+      <div className="container mx-auto px-4 max-w-7xl">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center">
-          <div className="relative burger-overflow">
+          <div 
+            ref={imageRef}
+            className={`relative burger-overflow transition-all duration-1000 ${
+              imageVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
+            }`}
+          >
             <div className="aspect-[4/3] rounded-2xl overflow-visible">
               <img
                 src="/chef-preparing-gourmet-burgers-in-kitchen.jpg"
@@ -13,7 +26,12 @@ export function AboutSection() {
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div 
+            ref={contentRef}
+            className={`space-y-6 transition-all duration-1000 ${
+              contentVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
+            }`}
+          >
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl text-balance font-[family-name:var(--font-display)]">
               PASIÓN POR LA HAMBURGUESA PERFECTA
             </h2>
@@ -30,7 +48,12 @@ export function AboutSection() {
               </p>
             </div>
 
-            <div className="grid grid-cols-3 gap-6 pt-6">
+            <div 
+              ref={statsRef}
+              className={`grid grid-cols-3 gap-6 pt-6 transition-all duration-1000 ${
+                statsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+              }`}
+            >
               <div className="space-y-2">
                 <div className="text-3xl font-bold text-primary">100%</div>
                 <div className="text-sm text-muted-foreground">Carne Premium</div>
@@ -40,7 +63,7 @@ export function AboutSection() {
                 <div className="text-sm text-muted-foreground">Extra rápido</div>
               </div>
               <div className="space-y-2">
-                <div className="text-3xl font-bold text-primary">Muchisimos</div>
+                <div className="text-3xl font-bold text-primary">+100</div>
                 <div className="text-sm text-muted-foreground">Clientes Satisfechos</div>
               </div>
             </div>

@@ -303,8 +303,8 @@ export function MenuSection() {
   )
 
   return (
-    <section id="menu" className="py-12 md:py-20 bg-secondary/30">
-      <div className="container px-4">
+    <section id="menu" className="py-12 md:py-20 bg-secondary/30 w-full">
+      <div className="container mx-auto px-4 max-w-7xl">
         <div className="text-center space-y-4 mb-12">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl text-balance font-[family-name:var(--font-display)]">
             NUESTRO MENÚ
