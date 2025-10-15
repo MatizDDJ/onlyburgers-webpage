@@ -4,8 +4,9 @@ import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/comp
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
 import { useCart } from "@/lib/cart-context"
-import { Plus, Check } from "lucide-react"
+import { Plus, Check, X } from "lucide-react"
 import { useState } from "react"
 
 export const menuItems = {
@@ -239,6 +240,7 @@ export const menuItems = {
 export function MenuSection() {
   const { addItem } = useCart()
   const [addedItemId, setAddedItemId] = useState<string | null>(null)
+  const [selectedItem, setSelectedItem] = useState<any | null>(null)
 
   const handleAddToCart = (item: any) => {
     addItem({
@@ -253,6 +255,9 @@ export function MenuSection() {
     setTimeout(() => {
       setAddedItemId(null)
     }, 2000)
+    
+    // Cerrar el modal si está abierto
+    setSelectedItem(null)
   }
 
   const renderMenuItems = (items: any[], showFreeFries = false) => (
@@ -262,12 +267,20 @@ export function MenuSection() {
           key={item.id}
           className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border-2 flex flex-col h-full"
         >
-          <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+          <div 
+            className="relative aspect-[4/3] overflow-hidden bg-muted cursor-pointer group"
+            onClick={() => setSelectedItem(item)}
+          >
             <img
               src={item.image || "/placeholder.svg"}
               alt={item.name}
-              className="object-cover w-full h-full hover:scale-110 transition-transform duration-500"
+              className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500"
             />
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+              <span className="text-white font-semibold text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                Ver detalles
+              </span>
+            </div>
             {item.popular && (
               <Badge className="absolute top-4 right-4 bg-primary text-primary-foreground shadow-lg z-10">
                 Popular
@@ -375,6 +388,64 @@ export function MenuSection() {
             {renderMenuItems(menuItems.papas)}
           </TabsContent>
         </Tabs>
+
+        {/* Modal de detalles del producto */}
+        <Dialog open={selectedItem !== null} onOpenChange={(open) => !open && setSelectedItem(null)}>
+          <DialogContent className="max-w-md md:max-w-2xl max-h-[85vh] overflow-y-auto animate-in fade-in-0 zoom-in-95 duration-300">
+            {selectedItem && (
+              <>
+                <DialogHeader>
+                  <DialogTitle className="text-xl md:text-3xl font-bold font-[family-name:var(--font-display)]">
+                    {selectedItem.name}
+                  </DialogTitle>
+                  <DialogDescription className="text-sm md:text-lg">
+                    {selectedItem.description}
+                  </DialogDescription>
+                </DialogHeader>
+
+                <div className="relative aspect-video overflow-hidden rounded-lg bg-muted">
+                  <img
+                    src={selectedItem.image || "/placeholder.svg"}
+                    alt={selectedItem.name}
+                    className="object-cover w-full h-full"
+                  />
+                  {selectedItem.popular && (
+                    <Badge className="absolute top-2 right-2 md:top-4 md:right-4 bg-primary text-primary-foreground shadow-lg text-xs md:text-sm">
+                      Popular
+                    </Badge>
+                  )}
+                  {selectedItem.includesFries && (
+                    <Badge className="absolute top-2 left-2 md:top-4 md:left-4 bg-green-600 text-white shadow-lg text-xs md:text-sm">
+                      🍟 Incluye Papas Gratis
+                    </Badge>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-center py-2 md:py-4">
+                  <span className="text-3xl md:text-4xl font-bold text-primary">$U {selectedItem.price}</span>
+                </div>
+
+                <DialogFooter className="flex flex-col sm:flex-row gap-2 md:gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => setSelectedItem(null)}
+                    className="flex-1 text-sm md:text-base py-4 md:py-6"
+                  >
+                    <X className="h-4 w-4 md:h-5 md:w-5 mr-2" />
+                    Cancelar
+                  </Button>
+                  <Button
+                    onClick={() => handleAddToCart(selectedItem)}
+                    className="flex-1 text-sm md:text-base py-4 md:py-6 shadow-md"
+                  >
+                    <Plus className="h-4 w-4 md:h-5 md:w-5 mr-2" />
+                    Agregar al Carrito
+                  </Button>
+                </DialogFooter>
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </section>
   )
