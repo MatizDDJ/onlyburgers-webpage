@@ -27,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className={`${inter.variable} ${bebasNeue.variable}`}>
-      <body className="antialiased">
+      <body className="antialiased w-full overflow-x-hidden">
         <CartProvider>{children}</CartProvider>
       </body>
     </html>
