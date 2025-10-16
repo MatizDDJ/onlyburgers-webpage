@@ -81,6 +81,10 @@ export default function ModificarMenuPage() {
   const [deleteCategory, setDeleteCategory] = useState<keyof MenuData | "">("")
   const [itemToDelete, setItemToDelete] = useState<string | null>(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  
+  // Estados para upload de imagen
+  const [uploadingImage, setUploadingImage] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
 
   useEffect(() => {
     // Verificar si hay token guardado en localStorage
@@ -149,6 +153,61 @@ export default function ModificarMenuPage() {
     setAuthToken(null)
     setIsAuthenticated(false)
     setMenuData(null)
+  }
+  
+  const handleImageUpload = async (file: File) => {
+    if (!file) return
+    
+    // Validar tipo de archivo
+    if (!file.type.startsWith('image/')) {
+      setErrorMessage('Por favor selecciona un archivo de imagen válido')
+      return
+    }
+    
+    // Validar tamaño (máximo 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setErrorMessage('La imagen es muy grande. Máximo 5MB.')
+      return
+    }
+    
+    setUploadingImage(true)
+    setUploadProgress(0)
+    setErrorMessage('')
+    
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      
+      // Simular progreso
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => Math.min(prev + 10, 90))
+      }, 200)
+      
+      const response = await fetch('/api/upload-image', {
+        method: 'POST',
+        body: formData,
+      })
+      
+      clearInterval(progressInterval)
+      
+      const data = await response.json()
+      
+      if (response.ok) {
+        setUploadProgress(100)
+        setNewProduct({ ...newProduct, image: data.url })
+        setTimeout(() => {
+          setUploadProgress(0)
+          setUploadingImage(false)
+        }, 500)
+      } else {
+        setErrorMessage(data.error || 'Error al subir la imagen')
+        setUploadingImage(false)
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error)
+      setErrorMessage('Error al subir la imagen')
+      setUploadingImage(false)
+    }
   }
 
   const handlePriceChange = (category: keyof MenuData, itemId: string, newPrice: string) => {
@@ -601,26 +660,95 @@ export default function ModificarMenuPage() {
               </div>
 
               <div className="space-y-2">
-                <Label>URL de la Imagen (opcional)</Label>
-                <Input
-                  value={newProduct.image}
-                  onChange={(e) =>
-                    setNewProduct({ ...newProduct, image: e.target.value })
-                  }
-                  placeholder="https://i.imgur.com/tu-imagen.jpg"
-                />
-                <p className="text-xs text-muted-foreground">
-                  💡 Deja vacío para usar imagen por defecto. Puedes subir tu imagen a{" "}
-                  <a 
-                    href="https://imgur.com/upload" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="text-primary hover:underline font-medium"
-                  >
-                    Imgur
-                  </a>
-                  {" "}y pegar el link aquí.
-                </p>
+                <Label>Imagen del Producto</Label>
+                
+                {/* Vista previa de la imagen */}
+                {newProduct.image && (
+                  <div className="relative w-full h-48 rounded-lg overflow-hidden border-2 border-border">
+                    <img
+                      src={newProduct.image}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                    />
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      className="absolute top-2 right-2"
+                      onClick={() => setNewProduct({ ...newProduct, image: "" })}
+                    >
+                      <XCircle className="h-4 w-4 mr-1" />
+                      Quitar
+                    </Button>
+                  </div>
+                )}
+                
+                {/* Botón para subir imagen */}
+                {!newProduct.image && (
+                  <div className="space-y-2">
+                    <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary transition-colors">
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0]
+                          if (file) handleImageUpload(file)
+                        }}
+                        disabled={uploadingImage}
+                        className="hidden"
+                        id="image-upload"
+                      />
+                      <Label
+                        htmlFor="image-upload"
+                        className="cursor-pointer flex flex-col items-center gap-2"
+                      >
+                        {uploadingImage ? (
+                          <>
+                            <Loader2 className="h-10 w-10 text-primary animate-spin" />
+                            <span className="text-sm font-medium">
+                              Subiendo imagen... {uploadProgress}%
+                            </span>
+                            <div className="w-full bg-secondary rounded-full h-2 mt-2">
+                              <div
+                                className="bg-primary h-2 rounded-full transition-all duration-300"
+                                style={{ width: `${uploadProgress}%` }}
+                              />
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <Plus className="h-10 w-10 text-muted-foreground" />
+                            <span className="text-sm font-medium">
+                              Click para subir imagen
+                            </span>
+                            <span className="text-xs text-muted-foreground">
+                              PNG, JPG, WebP (máx. 5MB)
+                            </span>
+                          </>
+                        )}
+                      </Label>
+                    </div>
+                    
+                    <div className="text-center">
+                      <span className="text-xs text-muted-foreground">o</span>
+                    </div>
+                    
+                    {/* Opción para pegar URL */}
+                    <div className="space-y-1">
+                      <Input
+                        value={newProduct.image}
+                        onChange={(e) =>
+                          setNewProduct({ ...newProduct, image: e.target.value })
+                        }
+                        placeholder="Pega una URL de imagen aquí"
+                        disabled={uploadingImage}
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        💡 Deja vacío para usar imagen por defecto
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center space-x-2">
