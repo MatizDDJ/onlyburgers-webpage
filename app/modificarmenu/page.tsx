@@ -7,8 +7,27 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Lock, Save, Loader2, CheckCircle, XCircle, Shield } from "lucide-react"
+import { Lock, Save, Loader2, CheckCircle, XCircle, Shield, Plus, Trash2, Edit, ArrowLeft } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { Textarea } from "@/components/ui/textarea"
+import { Checkbox } from "@/components/ui/checkbox"
 
 interface MenuItem {
   id: string
@@ -27,6 +46,8 @@ interface MenuData {
   papas: MenuItem[]
 }
 
+type AdminView = "menu" | "add" | "delete" | "edit"
+
 export default function ModificarMenuPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [authToken, setAuthToken] = useState<string | null>(null)
@@ -35,6 +56,31 @@ export default function ModificarMenuPage() {
   const [loading, setLoading] = useState(false)
   const [saveStatus, setSaveStatus] = useState<"idle" | "success" | "error">("idle")
   const [errorMessage, setErrorMessage] = useState("")
+  const [currentView, setCurrentView] = useState<AdminView>("menu")
+  
+  // Estados para añadir producto
+  const [newProduct, setNewProduct] = useState<{
+    category: keyof MenuData | ""
+    name: string
+    description: string
+    price: string
+    image: string
+    popular: boolean
+    includesFries: boolean
+  }>({
+    category: "",
+    name: "",
+    description: "",
+    price: "",
+    image: "",
+    popular: false,
+    includesFries: false,
+  })
+  
+  // Estados para eliminar producto
+  const [deleteCategory, setDeleteCategory] = useState<keyof MenuData | "">("")
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   useEffect(() => {
     // Verificar si hay token guardado en localStorage
@@ -108,6 +154,17 @@ export default function ModificarMenuPage() {
   const handlePriceChange = (category: keyof MenuData, itemId: string, newPrice: string) => {
     if (!menuData) return
     
+    // Permitir string vacío para poder borrar todo el precio
+    if (newPrice === "") {
+      setMenuData({
+        ...menuData,
+        [category]: menuData[category].map((item) =>
+          item.id === itemId ? { ...item, price: 0 } : item
+        ),
+      })
+      return
+    }
+    
     const price = parseFloat(newPrice)
     if (isNaN(price)) return
 
@@ -117,6 +174,84 @@ export default function ModificarMenuPage() {
         item.id === itemId ? { ...item, price } : item
       ),
     })
+  }
+  
+  const handleAddProduct = async () => {
+    if (!menuData || !newProduct.category || !newProduct.name || !newProduct.price) {
+      setErrorMessage("Por favor completa todos los campos obligatorios")
+      return
+    }
+    
+    const id = newProduct.name.toLowerCase().replace(/\s+/g, "-")
+    const price = parseFloat(newProduct.price)
+    
+    if (isNaN(price) || price <= 0) {
+      setErrorMessage("El precio debe ser un número válido mayor a 0")
+      return
+    }
+    
+    const newItem: MenuItem = {
+      id,
+      name: newProduct.name,
+      description: newProduct.description,
+      price,
+      image: newProduct.image || "/placeholder.svg",
+      popular: newProduct.popular,
+      includesFries: newProduct.includesFries,
+    }
+    
+    setMenuData({
+      ...menuData,
+      [newProduct.category]: [...menuData[newProduct.category], newItem],
+    })
+    
+    // Mostrar mensaje de éxito
+    setErrorMessage("")
+    setSaveStatus("success")
+    
+    // Esperar 3 segundos antes de volver
+    setTimeout(() => {
+      setNewProduct({
+        category: "",
+        name: "",
+        description: "",
+        price: "",
+        image: "",
+        popular: false,
+        includesFries: false,
+      })
+      setSaveStatus("idle")
+      setCurrentView("menu")
+    }, 3000)
+  }
+  
+  const handleDeleteProduct = () => {
+    if (!menuData || !deleteCategory || !itemToDelete) return
+    
+    setMenuData({
+      ...menuData,
+      [deleteCategory]: menuData[deleteCategory].filter(
+        (item) => item.id !== itemToDelete
+      ),
+    })
+    
+    setShowDeleteConfirm(false)
+    setItemToDelete(null)
+    setDeleteCategory("")
+    setSaveStatus("success")
+    setErrorMessage("")
+    
+    // Esperar 3 segundos antes de volver
+    setTimeout(() => {
+      setSaveStatus("idle")
+      setCurrentView("menu")
+    }, 3000)
+  }
+  
+  const confirmDelete = (category: keyof MenuData, itemId: string) => {
+    setDeleteCategory(category)
+    setItemToDelete(itemId)
+    setShowDeleteConfirm(true)
   }
 
   const handleSave = async () => {
@@ -223,6 +358,355 @@ export default function ModificarMenuPage() {
 
   if (!menuData) return null
 
+  // Vista de menú principal
+  if (currentView === "menu") {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-background to-secondary/30 py-8">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <div className="mb-8 flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl md:text-4xl font-bold mb-2 font-[family-name:var(--font-display)]">
+                Panel de Administración
+              </h1>
+              <p className="text-muted-foreground">
+                Selecciona una opción para gestionar el menú
+              </p>
+            </div>
+            <Button variant="outline" onClick={handleLogout}>
+              Cerrar Sesión
+            </Button>
+          </div>
+
+          {saveStatus === "success" && (
+            <Alert className="mb-6 border-green-500 bg-green-50 dark:bg-green-950">
+              <CheckCircle className="h-4 w-4 text-green-600" />
+              <AlertDescription className="text-green-600">
+                ¡Menú actualizado correctamente!
+              </AlertDescription>
+            </Alert>
+          )}
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <Card
+              className="cursor-pointer hover:shadow-lg transition-shadow"
+              onClick={() => setCurrentView("add")}
+            >
+              <CardHeader className="text-center">
+                <div className="mx-auto w-16 h-16 bg-green-100 dark:bg-green-950 rounded-full flex items-center justify-center mb-4">
+                  <Plus className="h-8 w-8 text-green-600 dark:text-green-400" />
+                </div>
+                <CardTitle className="text-xl">Añadir al Menú</CardTitle>
+                <CardDescription>
+                  Agregar nuevos productos (hamburguesas, bebidas, etc.)
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card
+              className="cursor-pointer hover:shadow-lg transition-shadow"
+              onClick={() => setCurrentView("delete")}
+            >
+              <CardHeader className="text-center">
+                <div className="mx-auto w-16 h-16 bg-red-100 dark:bg-red-950 rounded-full flex items-center justify-center mb-4">
+                  <Trash2 className="h-8 w-8 text-red-600 dark:text-red-400" />
+                </div>
+                <CardTitle className="text-xl">Eliminar del Menú</CardTitle>
+                <CardDescription>
+                  Quitar productos existentes del menú
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card
+              className="cursor-pointer hover:shadow-lg transition-shadow"
+              onClick={() => setCurrentView("edit")}
+            >
+              <CardHeader className="text-center">
+                <div className="mx-auto w-16 h-16 bg-blue-100 dark:bg-blue-950 rounded-full flex items-center justify-center mb-4">
+                  <Edit className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+                </div>
+                <CardTitle className="text-xl">Modificar Precios</CardTitle>
+                <CardDescription>
+                  Editar precios de productos existentes
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Vista de añadir producto
+  if (currentView === "add") {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-background to-secondary/30 py-8">
+        <div className="container mx-auto px-4 max-w-3xl">
+          <Button
+            variant="ghost"
+            onClick={() => setCurrentView("menu")}
+            className="mb-6"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Volver
+          </Button>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl">Añadir Producto al Menú</CardTitle>
+              <CardDescription>
+                Completa los datos del nuevo producto
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {saveStatus === "success" && (
+                <Alert className="border-green-500 bg-green-50 dark:bg-green-950">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  <AlertDescription className="text-green-600">
+                    ✅ ¡Producto agregado al menú! Volviendo al menú principal...
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              {errorMessage && (
+                <Alert variant="destructive">
+                  <XCircle className="h-4 w-4" />
+                  <AlertDescription>{errorMessage}</AlertDescription>
+                </Alert>
+              )}
+
+              <div className="space-y-2">
+                <Label>Categoría *</Label>
+                <Select
+                  value={newProduct.category}
+                  onValueChange={(value) =>
+                    setNewProduct({ ...newProduct, category: value as keyof MenuData })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecciona una categoría" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="hamburguesas">Hamburguesas</SelectItem>
+                    <SelectItem value="bebidas">Bebidas</SelectItem>
+                    <SelectItem value="milanesas">Milanesas</SelectItem>
+                    <SelectItem value="papas">Papas Fritas</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Nombre *</Label>
+                <Input
+                  value={newProduct.name}
+                  onChange={(e) =>
+                    setNewProduct({ ...newProduct, name: e.target.value })
+                  }
+                  placeholder="Ej: Burguer Clásica"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Descripción</Label>
+                <Textarea
+                  value={newProduct.description}
+                  onChange={(e) =>
+                    setNewProduct({ ...newProduct, description: e.target.value })
+                  }
+                  placeholder="Describe el producto..."
+                  rows={3}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Precio ($U) *</Label>
+                <Input
+                  type="number"
+                  value={newProduct.price}
+                  onChange={(e) =>
+                    setNewProduct({ ...newProduct, price: e.target.value })
+                  }
+                  placeholder="180"
+                  step="1"
+                  min="0"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>URL de la Imagen (opcional)</Label>
+                <Input
+                  value={newProduct.image}
+                  onChange={(e) =>
+                    setNewProduct({ ...newProduct, image: e.target.value })
+                  }
+                  placeholder="https://i.imgur.com/tu-imagen.jpg"
+                />
+                <p className="text-xs text-muted-foreground">
+                  💡 Deja vacío para usar imagen por defecto. Puedes subir tu imagen a{" "}
+                  <a 
+                    href="https://imgur.com/upload" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-primary hover:underline font-medium"
+                  >
+                    Imgur
+                  </a>
+                  {" "}y pegar el link aquí.
+                </p>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="popular"
+                  checked={newProduct.popular}
+                  onCheckedChange={(checked) =>
+                    setNewProduct({ ...newProduct, popular: checked as boolean })
+                  }
+                />
+                <Label htmlFor="popular" className="cursor-pointer">
+                  Marcar como producto popular
+                </Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="includesFries"
+                  checked={newProduct.includesFries}
+                  onCheckedChange={(checked) =>
+                    setNewProduct({ ...newProduct, includesFries: checked as boolean })
+                  }
+                />
+                <Label htmlFor="includesFries" className="cursor-pointer">
+                  Incluye papas fritas
+                </Label>
+              </div>
+
+              <div className="flex gap-4 pt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentView("menu")}
+                  className="flex-1"
+                >
+                  Cancelar
+                </Button>
+                <Button onClick={handleAddProduct} className="flex-1">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Añadir Producto
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
+  // Vista de eliminar producto
+  if (currentView === "delete") {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-background to-secondary/30 py-8">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <Button
+            variant="ghost"
+            onClick={() => setCurrentView("menu")}
+            className="mb-6"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Volver
+          </Button>
+
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="text-2xl">Eliminar Producto del Menú</CardTitle>
+              <CardDescription>
+                Selecciona el producto que deseas eliminar
+              </CardDescription>
+            </CardHeader>
+          </Card>
+
+          {saveStatus === "success" && (
+            <Alert className="mb-6 border-green-500 bg-green-50 dark:bg-green-950">
+              <CheckCircle className="h-4 w-4 text-green-600" />
+              <AlertDescription className="text-green-600">
+                ✅ ¡Producto eliminado del menú! Volviendo al menú principal...
+              </AlertDescription>
+            </Alert>
+          )}
+
+          <Tabs defaultValue="hamburguesas" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-8">
+              <TabsTrigger value="hamburguesas">Hamburguesas</TabsTrigger>
+              <TabsTrigger value="bebidas">Bebidas</TabsTrigger>
+              <TabsTrigger value="milanesas">Milanesas</TabsTrigger>
+              <TabsTrigger value="papas">Papas Fritas</TabsTrigger>
+            </TabsList>
+
+            {(["hamburguesas", "bebidas", "milanesas", "papas"] as const).map((category) => (
+              <TabsContent key={category} value={category}>
+                <div className="grid gap-4 md:grid-cols-2">
+                  {menuData[category].map((item) => (
+                    <Card key={item.id}>
+                      <CardHeader>
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <CardTitle className="text-lg">{item.name}</CardTitle>
+                            <CardDescription className="text-sm mt-1">
+                              ${item.price}
+                            </CardDescription>
+                          </div>
+                          {item.image && (
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              className="w-16 h-16 object-cover rounded-lg ml-4"
+                            />
+                          )}
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => confirmDelete(category, item.id)}
+                          className="w-full"
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Eliminar
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </TabsContent>
+            ))}
+          </Tabs>
+
+          <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Esta acción no se puede deshacer. El producto será eliminado permanentemente
+                  del menú cuando guardes los cambios.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleDeleteProduct}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  Eliminar
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      </div>
+    )
+  }
+
+  // Vista de modificar precios
   const renderCategoryItems = (category: keyof MenuData) => (
     <div className="space-y-4">
       {menuData[category].map((item) => (
@@ -264,14 +748,32 @@ export default function ModificarMenuPage() {
                 </Label>
                 <Input
                   id={`price-${item.id}`}
-                  type="number"
-                  value={item.price}
-                  onChange={(e) =>
-                    handlePriceChange(category, item.id, e.target.value)
-                  }
+                  type="text"
+                  inputMode="numeric"
+                  value={item.price || ""}
+                  onChange={(e) => {
+                    const value = e.target.value
+                    // Permitir solo números y vacío
+                    if (value === "" || /^\d+$/.test(value)) {
+                      handlePriceChange(category, item.id, value)
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    // Permitir: backspace, delete, tab, escape, enter, números
+                    if (
+                      e.key === "Backspace" ||
+                      e.key === "Delete" ||
+                      e.key === "Tab" ||
+                      e.key === "Escape" ||
+                      e.key === "Enter" ||
+                      /^\d$/.test(e.key)
+                    ) {
+                      return
+                    }
+                    e.preventDefault()
+                  }}
                   className="mt-1"
-                  step="1"
-                  min="0"
+                  placeholder="0"
                 />
               </div>
             </div>
@@ -284,18 +786,23 @@ export default function ModificarMenuPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/30 py-8">
       <div className="container mx-auto px-4 max-w-6xl">
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-bold mb-2 font-[family-name:var(--font-display)]">
-              Panel de Administración
-            </h1>
-            <p className="text-muted-foreground">
-              Modifica los precios del menú. Los cambios se guardarán permanentemente.
-            </p>
-          </div>
-          <Button variant="outline" onClick={handleLogout}>
-            Cerrar Sesión
-          </Button>
+        <Button
+          variant="ghost"
+          onClick={() => setCurrentView("menu")}
+          className="mb-6"
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Volver
+        </Button>
+
+        <div className="mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2 font-[family-name:var(--font-display)]">
+            Modificar Precios del Menú
+          </h1>
+          <p className="text-muted-foreground">
+            Edita los precios de los productos. Los cambios se guardarán al hacer click en
+            &quot;Guardar Cambios&quot;.
+          </p>
         </div>
 
         {saveStatus === "success" && (
