@@ -1,4 +1,4 @@
-# 🍔 ONLY BURGERS - Sitio Web de Pedidos
+# 🍔 ONLY BURGUERS - Sitio Web de Pedidos
 
 <div align="center">
 
