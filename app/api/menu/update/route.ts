@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
-import fs from 'fs'
-import path from 'path'
+import { redis, MENU_KEY } from '@/lib/redis'
 
 export async function POST(request: Request) {
   try {
@@ -16,8 +15,8 @@ export async function POST(request: Request) {
       )
     }
     
-    const filePath = path.join(process.cwd(), 'data', 'menu.json')
-    fs.writeFileSync(filePath, JSON.stringify(menuData, null, 2), 'utf8')
+    // Guardar en Redis (Upstash) - funciona en Vercel
+    await redis.set(MENU_KEY, menuData)
     
     return NextResponse.json({ success: true, message: 'Menú actualizado correctamente' })
   } catch (error) {
