@@ -6,7 +6,7 @@ export function Footer() {
       <div className="container mx-auto max-w-7xl px-4 py-12">
         <div className="grid gap-8 md:grid-cols-4">
           <div className="space-y-4">
-            <div className="text-2xl font-bold tracking-tight font-[family-name:var(--font-display)]">ONLY BURGERS</div>
+            <div className="text-2xl font-bold tracking-tight font-[family-name:var(--font-display)]">ONLY BURGUERS</div>
             <p className="text-sm text-accent-foreground/80 leading-relaxed">
               Maestría en hamburguesas.
             </p>
