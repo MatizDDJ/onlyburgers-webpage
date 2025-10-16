@@ -241,8 +241,7 @@ export function MenuSection() {
   const { addItem } = useCart()
   const [addedItemId, setAddedItemId] = useState<string | null>(null)
   const [selectedItem, setSelectedItem] = useState<any | null>(null)
-  const [menuData, setMenuData] = useState<typeof menuItems | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [menuData, setMenuData] = useState<typeof menuItems>(menuItems)
 
   useEffect(() => {
     async function fetchMenu() {
@@ -252,10 +251,7 @@ export function MenuSection() {
         setMenuData(data)
       } catch (error) {
         console.error('Error fetching menu:', error)
-        // Fallback a datos locales si falla la API
-        setMenuData(menuItems)
-      } finally {
-        setLoading(false)
+        // Mantener datos locales si falla la API
       }
     }
     fetchMenu()
@@ -333,23 +329,6 @@ export function MenuSection() {
       ))}
     </div>
   )
-
-  if (loading) {
-    return (
-      <section id="menu" className="py-12 md:py-20 bg-secondary/30 w-full">
-        <div className="container mx-auto px-4 max-w-7xl flex items-center justify-center min-h-[400px]">
-          <div className="flex flex-col items-center gap-4">
-            <Loader2 className="h-12 w-12 animate-spin text-primary" />
-            <p className="text-lg text-muted-foreground">Cargando menú...</p>
-          </div>
-        </div>
-      </section>
-    )
-  }
-
-  if (!menuData) {
-    return null
-  }
 
   return (
     <section id="menu" className="py-12 md:py-20 bg-secondary/30 w-full">

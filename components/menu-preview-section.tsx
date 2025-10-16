@@ -13,8 +13,7 @@ import { useIntersectionObserver } from "@/hooks/use-intersection-observer"
 export function MenuPreviewSection() {
   const { addItem } = useCart()
   const [addedItemId, setAddedItemId] = useState<string | null>(null)
-  const [menuData, setMenuData] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
+  const [menuData, setMenuData] = useState<any>(menuItems)
   const { elementRef: titleRef, isVisible: titleVisible } = useIntersectionObserver({ threshold: 0.2 })
   const { elementRef: cardsRef, isVisible: cardsVisible } = useIntersectionObserver({ threshold: 0.1 })
   const { elementRef: buttonRef, isVisible: buttonVisible } = useIntersectionObserver({ threshold: 0.2 })
@@ -27,17 +26,14 @@ export function MenuPreviewSection() {
         setMenuData(data)
       } catch (error) {
         console.error('Error fetching menu:', error)
-        // Fallback a datos locales si falla la API
-        setMenuData(menuItems)
-      } finally {
-        setLoading(false)
+        // Mantener datos locales si falla la API
       }
     }
     fetchMenu()
   }, [])
 
   // Mostrar solo las hamburguesas populares
-  const featuredBurgers = menuData?.hamburguesas.filter((item: any) => item.popular).slice(0, 3) || []
+  const featuredBurgers = menuData?.hamburguesas?.filter((item: any) => item.popular).slice(0, 3) || []
 
   const handleAddToCart = (item: any) => {
     addItem({
@@ -52,16 +48,6 @@ export function MenuPreviewSection() {
     setTimeout(() => {
       setAddedItemId(null)
     }, 2000)
-  }
-
-  if (loading) {
-    return (
-      <section id="menu" className="py-12 md:py-20 bg-secondary/30 w-full">
-        <div className="container mx-auto px-4 max-w-7xl flex items-center justify-center min-h-[400px]">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        </div>
-      </section>
-    )
   }
 
   return (
