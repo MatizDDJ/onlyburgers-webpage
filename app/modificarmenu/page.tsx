@@ -200,52 +200,120 @@ export default function ModificarMenuPage() {
       includesFries: newProduct.includesFries,
     }
     
-    setMenuData({
+    const updatedMenuData = {
       ...menuData,
       [newProduct.category]: [...menuData[newProduct.category], newItem],
-    })
+    }
     
-    // Mostrar mensaje de éxito
-    setErrorMessage("")
-    setSaveStatus("success")
+    setMenuData(updatedMenuData)
     
-    // Esperar 3 segundos antes de volver
-    setTimeout(() => {
-      setNewProduct({
-        category: "",
-        name: "",
-        description: "",
-        price: "",
-        image: "",
-        popular: false,
-        includesFries: false,
+    // Guardar en la base de datos
+    setLoading(true)
+    try {
+      const response = await fetch("/api/menu/update", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({ menuData: updatedMenuData }),
       })
-      setSaveStatus("idle")
-      setCurrentView("menu")
-    }, 3000)
+
+      const result = await response.json()
+
+      if (response.ok) {
+        // Limpiar caché del menú
+        localStorage.removeItem('onlyburgers_menu_cache')
+        
+        // Mostrar mensaje de éxito
+        setErrorMessage("")
+        setSaveStatus("success")
+        
+        // Esperar 3 segundos antes de volver
+        setTimeout(() => {
+          setNewProduct({
+            category: "",
+            name: "",
+            description: "",
+            price: "",
+            image: "",
+            popular: false,
+            includesFries: false,
+          })
+          setSaveStatus("idle")
+          setCurrentView("menu")
+        }, 3000)
+      } else {
+        if (response.status === 401) {
+          setErrorMessage("Sesión expirada. Por favor, inicia sesión nuevamente.")
+          handleLogout()
+        } else {
+          setErrorMessage(result.error || "Error al guardar el producto")
+        }
+      }
+    } catch (error) {
+      console.error("Error saving product:", error)
+      setErrorMessage("Error al guardar el producto")
+    } finally {
+      setLoading(false)
+    }
   }
   
-  const handleDeleteProduct = () => {
+  const handleDeleteProduct = async () => {
     if (!menuData || !deleteCategory || !itemToDelete) return
     
-    setMenuData({
+    const updatedMenuData = {
       ...menuData,
       [deleteCategory]: menuData[deleteCategory].filter(
         (item) => item.id !== itemToDelete
       ),
-    })
+    }
     
+    setMenuData(updatedMenuData)
     setShowDeleteConfirm(false)
-    setItemToDelete(null)
-    setDeleteCategory("")
-    setSaveStatus("success")
-    setErrorMessage("")
     
-    // Esperar 3 segundos antes de volver
-    setTimeout(() => {
-      setSaveStatus("idle")
-      setCurrentView("menu")
-    }, 3000)
+    // Guardar en la base de datos
+    setLoading(true)
+    try {
+      const response = await fetch("/api/menu/update", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({ menuData: updatedMenuData }),
+      })
+
+      const result = await response.json()
+
+      if (response.ok) {
+        // Limpiar caché del menú
+        localStorage.removeItem('onlyburgers_menu_cache')
+        
+        setItemToDelete(null)
+        setDeleteCategory("")
+        setSaveStatus("success")
+        setErrorMessage("")
+        
+        // Esperar 3 segundos antes de volver
+        setTimeout(() => {
+          setSaveStatus("idle")
+          setCurrentView("menu")
+        }, 3000)
+      } else {
+        if (response.status === 401) {
+          setErrorMessage("Sesión expirada. Por favor, inicia sesión nuevamente.")
+          handleLogout()
+        } else {
+          setErrorMessage(result.error || "Error al eliminar el producto")
+        }
+      }
+    } catch (error) {
+      console.error("Error deleting product:", error)
+      setErrorMessage("Error al eliminar el producto")
+    } finally {
+      setLoading(false)
+    }
   }
   
   const confirmDelete = (category: keyof MenuData, itemId: string) => {
