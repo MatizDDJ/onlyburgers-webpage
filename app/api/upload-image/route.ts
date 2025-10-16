@@ -10,6 +10,15 @@ cloudinary.config({
 
 export async function POST(request: NextRequest) {
   try {
+    // Verificar configuración
+    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+      console.error('Cloudinary credentials missing')
+      return NextResponse.json(
+        { error: 'Configuración de Cloudinary incompleta' },
+        { status: 500 }
+      )
+    }
+
     const formData = await request.formData()
     const file = formData.get('file') as File
 
@@ -20,37 +29,29 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Convertir archivo a buffer
+    // Convertir archivo a base64
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
+    const base64String = `data:${file.type};base64,${buffer.toString('base64')}`
 
-    // Subir a Cloudinary usando upload_stream
-    const result = await new Promise((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        {
-          folder: 'onlyburgers', // Organizar en carpeta
-          transformation: [
-            { width: 1200, height: 900, crop: 'limit' }, // Máximo 1200x900
-            { quality: 'auto' }, // Optimización automática
-            { fetch_format: 'auto' }, // Formato automático (WebP, etc)
-          ],
-        },
-        (error, result) => {
-          if (error) reject(error)
-          else resolve(result)
-        }
-      )
-      uploadStream.end(buffer)
+    // Subir a Cloudinary usando base64
+    const result = await cloudinary.uploader.upload(base64String, {
+      folder: 'onlyburgers',
+      transformation: [
+        { width: 1200, height: 900, crop: 'limit' },
+        { quality: 'auto' },
+        { fetch_format: 'auto' },
+      ],
     })
 
     return NextResponse.json({
       success: true,
-      url: (result as any).secure_url,
+      url: result.secure_url,
     })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error uploading to Cloudinary:', error)
     return NextResponse.json(
-      { error: 'Error al subir la imagen' },
+      { error: error?.message || 'Error al subir la imagen' },
       { status: 500 }
     )
   }
