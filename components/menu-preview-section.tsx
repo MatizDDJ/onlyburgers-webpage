@@ -4,8 +4,8 @@ import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/comp
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useCart } from "@/lib/cart-context"
-import { Plus, Check, ArrowRight } from "lucide-react"
-import { useState } from "react"
+import { Plus, Check, ArrowRight, Loader2 } from "lucide-react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { menuItems } from "./menu-section"
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer"
@@ -13,12 +13,31 @@ import { useIntersectionObserver } from "@/hooks/use-intersection-observer"
 export function MenuPreviewSection() {
   const { addItem } = useCart()
   const [addedItemId, setAddedItemId] = useState<string | null>(null)
+  const [menuData, setMenuData] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
   const { elementRef: titleRef, isVisible: titleVisible } = useIntersectionObserver({ threshold: 0.2 })
   const { elementRef: cardsRef, isVisible: cardsVisible } = useIntersectionObserver({ threshold: 0.1 })
   const { elementRef: buttonRef, isVisible: buttonVisible } = useIntersectionObserver({ threshold: 0.2 })
 
+  useEffect(() => {
+    async function fetchMenu() {
+      try {
+        const response = await fetch('/api/menu')
+        const data = await response.json()
+        setMenuData(data)
+      } catch (error) {
+        console.error('Error fetching menu:', error)
+        // Fallback a datos locales si falla la API
+        setMenuData(menuItems)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchMenu()
+  }, [])
+
   // Mostrar solo las hamburguesas populares
-  const featuredBurgers = menuItems.hamburguesas.filter((item) => item.popular).slice(0, 3)
+  const featuredBurgers = menuData?.hamburguesas.filter((item: any) => item.popular).slice(0, 3) || []
 
   const handleAddToCart = (item: any) => {
     addItem({
@@ -33,6 +52,16 @@ export function MenuPreviewSection() {
     setTimeout(() => {
       setAddedItemId(null)
     }, 2000)
+  }
+
+  if (loading) {
+    return (
+      <section id="menu" className="py-12 md:py-20 bg-secondary/30 w-full">
+        <div className="container mx-auto px-4 max-w-7xl flex items-center justify-center min-h-[400px]">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </section>
+    )
   }
 
   return (
@@ -56,7 +85,7 @@ export function MenuPreviewSection() {
           ref={cardsRef}
           className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-12"
         >
-          {featuredBurgers.map((item, index) => (
+          {featuredBurgers.map((item: any, index: number) => (
             <Card 
               key={item.id} 
               className={`overflow-hidden group hover:shadow-xl transition-all duration-700 ${

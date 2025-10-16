@@ -1,0 +1,235 @@
+{
+  "hamburguesas": [
+    {
+      "id": "burguer-classic",
+      "name": "Burguer Classic",
+      "description": "Una carne smash, dos fetas de queso cheddar, panceta ahumada",
+      "price": 190,
+      "image": "/classic-cheeseburger-with-melted-cheese.jpg",
+      "popular": true,
+      "includesFries": false
+    },
+    {
+      "id": "special-burguer",
+      "name": "Special Burguer",
+      "description": "Doble carne smash, tres fetas de queso cheddar, panceta ahumada",
+      "price": 250,
+      "image": "/bbq-bacon-burger.jpg",
+      "popular": true,
+      "includesFries": true
+    },
+    {
+      "id": "burguer-only",
+      "name": "Burguer Only",
+      "description": "Triple carnes smash, cuatro fetas de cheddar, panceta ahumada",
+      "price": 290,
+      "image": "/mushroom-swiss-burger-gourmet.jpg",
+      "popular": false,
+      "includesFries": true
+    },
+    {
+      "id": "burguer-bunker",
+      "name": "Burguer Bunker",
+      "description": "Doble carne smash, cuatro fetas de queso cheddar, panceta ahumada, cebolla caramelizada",
+      "price": 290,
+      "image": "/spicy-jalapeno-burger-with-peppers.jpg",
+      "popular": false,
+      "includesFries": true
+    },
+    {
+      "id": "burguer-simple",
+      "name": "Burguer Simple",
+      "description": "Doble carne smash, dos fetas de muzzarella, lechuga, tomate",
+      "price": 280,
+      "image": "/gourmet-veggie-burger-with-avocado.jpg",
+      "popular": false,
+      "includesFries": true
+    },
+    {
+      "id": "burguer-new",
+      "name": "Burguer New",
+      "description": "Doble carne smash, jamon, muzarrella, papitas pay, cheddar",
+      "price": 290,
+      "image": "/ultimate-triple-burger-stacked-high.jpg",
+      "popular": true,
+      "includesFries": true
+    },
+    {
+      "id": "burguer-especialidad",
+      "name": "Burguer Especialidad de la Casa",
+      "description": "Triple carne smash, tres fetas de queso cheddar, muzzarella, panceta ahumada, lechuga, tomate",
+      "price": 320,
+      "image": "/ultimate-triple-burger-stacked-high.jpg",
+      "popular": true,
+      "includesFries": true
+    },
+    {
+      "id": "burguer-quintuple",
+      "name": "Burguer Super Quintuple",
+      "description": "Cinco carnes smash, cinco fetas de queso cheddar, extra panceta, lechuga, tomate, cebolla blanca",
+      "price": 550,
+      "image": "/ultimate-triple-burger-stacked-high.jpg",
+      "popular": false,
+      "includesFries": true
+    },
+    {
+      "id": "burguer-veggie1",
+      "name": "Burguer Veggie boniato y zanahoria",
+      "description": "Una burguer de boniato y zanahoria, queso cheddar, lechuga, tomate",
+      "price": 320,
+      "image": "/ultimate-triple-burger-stacked-high.jpg",
+      "popular": false,
+      "includesFries": false
+    },
+    {
+      "id": "burguer-veggie2",
+      "name": "Burguer Veggie espinaca y puerro",
+      "description": "Una burguer de espinaca y puerro, muzzarella, lechuga, tomate",
+      "price": 320,
+      "image": "/ultimate-triple-burger-stacked-high.jpg",
+      "popular": false,
+      "includesFries": false
+    }
+  ],
+  "bebidas": [
+    {
+      "id": "coca-cola-600",
+      "name": "Coca-Cola 600ml",
+      "description": "Bebida refrescante",
+      "price": 80,
+      "image": "/coca-cola-bottle-600ml.jpg",
+      "popular": false,
+      "includesFries": false
+    },
+    {
+      "id": "coca-cola-zero-600",
+      "name": "Coca-Cola Zero 600ml",
+      "description": "Sin azúcar",
+      "price": 80,
+      "image": "/coca-cola-zero-bottle-600ml.jpg",
+      "popular": false,
+      "includesFries": false
+    },
+    {
+      "id": "sprite-600",
+      "name": "Sprite 600ml",
+      "description": "Bebida de lima-limón",
+      "price": 80,
+      "image": "/sprite-bottle-600ml.jpg",
+      "popular": false,
+      "includesFries": false
+    },
+    {
+      "id": "fanta-600",
+      "name": "Fanta 600ml",
+      "description": "Sabor naranja",
+      "price": 80,
+      "image": "/fanta-orange-bottle-600ml.jpg",
+      "popular": false,
+      "includesFries": false
+    },
+    {
+      "id": "coca-cola-1500",
+      "name": "Coca-Cola 1.5L",
+      "description": "Tamaño familiar",
+      "price": 150,
+      "image": "/coca-cola-bottle-1-5-liter.jpg",
+      "popular": false,
+      "includesFries": false
+    },
+    {
+      "id": "coca-cola-zero-1500",
+      "name": "Coca-Cola Zero 1.5L",
+      "description": "Sin azúcar, tamaño familiar",
+      "price": 150,
+      "image": "/coca-cola-zero-bottle-1-5-liter.jpg",
+      "popular": false,
+      "includesFries": false
+    },
+    {
+      "id": "sprite-1500",
+      "name": "Sprite 1.5L",
+      "description": "Tamaño familiar",
+      "price": 150,
+      "image": "/sprite-bottle-1-5-liter.jpg",
+      "popular": false,
+      "includesFries": false
+    },
+    {
+      "id": "fanta-1500",
+      "name": "Fanta 1.5L",
+      "description": "Tamaño familiar",
+      "price": 180,
+      "image": "/fanta-orange-bottle-1-5-liter.jpg",
+      "popular": false,
+      "includesFries": false
+    }
+  ],
+  "milanesas": [
+    {
+      "id": "milanesa-bunker",
+      "name": "Milanesa Bunker",
+      "description": "una supermila de carne o pollo, cuatro fetas de queso cheddar, cebolla caramelizada, extra panceta ahumada",
+      "price": 380,
+      "image": "/breaded-beef-milanesa-with-fries.jpg",
+      "popular": false,
+      "includesFries": true
+    },
+    {
+      "id": "milanesa-simple",
+      "name": "Milanesa Simple",
+      "description": "Una supermila de carne o pollo, extra muzzarella, lechuga, tomate",
+      "price": 380,
+      "image": "/milanesa-napolitana-with-cheese-and-ham.jpg",
+      "popular": false,
+      "includesFries": true
+    },
+    {
+      "id": "milanesa-new",
+      "name": "Milanesa New",
+      "description": "Una super mila de carne o pollo, cuatro fetas de queso cheddar, jamon, muzzarella, lluvia de papitas pay",
+      "price": 380,
+      "image": "/breaded-chicken-milanesa-with-fries.jpg",
+      "popular": false,
+      "includesFries": true
+    },
+    {
+      "id": "milanesa-especialidad",
+      "name": "Milanesa Especialidad de la Casa",
+      "description": "Una supermila de carne o pollo, seis fetas de queso cheddar, extra muzzarella, panceta ahumada sofritada, lechuga, tomate",
+      "price": 420,
+      "image": "/breaded-chicken-milanesa-with-fries.jpg",
+      "popular": false,
+      "includesFries": true
+    }
+  ],
+  "papas": [
+    {
+      "id": "papas-clasicas",
+      "name": "Papas Fritas Clásicas",
+      "description": "Porción grande de papas fritas crujientes",
+      "price": 180,
+      "image": "/crispy-french-fries-portion.jpg",
+      "popular": false,
+      "includesFries": false
+    },
+    {
+      "id": "papas-cheddar",
+      "name": "Papas con Cheddar y Bacon",
+      "description": "Papas fritas con queso cheddar derretido y bacon",
+      "price": 250,
+      "image": "/loaded-fries-with-cheddar-and-bacon.jpg",
+      "popular": false,
+      "includesFries": false
+    },
+    {
+      "id": "papas-rusticas",
+      "name": "Papas Rústicas",
+      "description": "Papas con piel, especias y hierbas",
+      "price": 200,
+      "image": "/rustic-potato-wedges-with-herbs.jpg",
+      "popular": false,
+      "includesFries": false
+    }
+  ]
+}

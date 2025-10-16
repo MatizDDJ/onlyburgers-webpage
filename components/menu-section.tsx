@@ -6,8 +6,8 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
 import { useCart } from "@/lib/cart-context"
-import { Plus, Check, X } from "lucide-react"
-import { useState } from "react"
+import { Plus, Check, X, Loader2 } from "lucide-react"
+import { useState, useEffect } from "react"
 
 export const menuItems = {
   hamburguesas: [
@@ -241,6 +241,25 @@ export function MenuSection() {
   const { addItem } = useCart()
   const [addedItemId, setAddedItemId] = useState<string | null>(null)
   const [selectedItem, setSelectedItem] = useState<any | null>(null)
+  const [menuData, setMenuData] = useState<typeof menuItems | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchMenu() {
+      try {
+        const response = await fetch('/api/menu')
+        const data = await response.json()
+        setMenuData(data)
+      } catch (error) {
+        console.error('Error fetching menu:', error)
+        // Fallback a datos locales si falla la API
+        setMenuData(menuItems)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchMenu()
+  }, [])
 
   const handleAddToCart = (item: any) => {
     addItem({
@@ -315,6 +334,23 @@ export function MenuSection() {
     </div>
   )
 
+  if (loading) {
+    return (
+      <section id="menu" className="py-12 md:py-20 bg-secondary/30 w-full">
+        <div className="container mx-auto px-4 max-w-7xl flex items-center justify-center min-h-[400px]">
+          <div className="flex flex-col items-center gap-4">
+            <Loader2 className="h-12 w-12 animate-spin text-primary" />
+            <p className="text-lg text-muted-foreground">Cargando menú...</p>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (!menuData) {
+    return null
+  }
+
   return (
     <section id="menu" className="py-12 md:py-20 bg-secondary/30 w-full">
       <div className="container mx-auto px-4 max-w-7xl">
@@ -355,7 +391,7 @@ export function MenuSection() {
             <h3 className="text-2xl font-bold text-center mb-6 font-[family-name:var(--font-display)]">
               NUESTRAS HAMBURGUESAS
             </h3>
-            {renderMenuItems(menuItems.hamburguesas)}
+            {renderMenuItems(menuData.hamburguesas)}
           </TabsContent>
 
           <TabsContent 
@@ -365,7 +401,7 @@ export function MenuSection() {
             <h3 className="text-2xl font-bold text-center mb-6 font-[family-name:var(--font-display)]">
               NUESTRAS BEBIDAS
             </h3>
-            {renderMenuItems(menuItems.bebidas)}
+            {renderMenuItems(menuData.bebidas)}
           </TabsContent>
 
           <TabsContent 
@@ -375,7 +411,7 @@ export function MenuSection() {
             <h3 className="text-2xl font-bold text-center mb-6 font-[family-name:var(--font-display)]">
               NUESTRAS MILANESAS
             </h3>
-            {renderMenuItems(menuItems.milanesas)}
+            {renderMenuItems(menuData.milanesas)}
           </TabsContent>
 
           <TabsContent 
@@ -385,7 +421,7 @@ export function MenuSection() {
             <h3 className="text-2xl font-bold text-center mb-6 font-[family-name:var(--font-display)]">
               NUESTRAS PAPAS FRITAS
             </h3>
-            {renderMenuItems(menuItems.papas)}
+            {renderMenuItems(menuData.papas)}
           </TabsContent>
         </Tabs>
 
