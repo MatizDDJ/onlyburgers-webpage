@@ -22,15 +22,21 @@
 
 - [Características](#-características)
 - [Stack Tecnológico](#-stack-tecnológico)
+- [Arquitectura](#-arquitectura)
 - [Instalación](#-instalación)
 - [Configuración](#-configuración)
-- [Panel de Administración](#-panel-de-administración)
-- [Sistema de Imágenes](#-sistema-de-imágenes)
+- [Estructura del Proyecto](#-estructura-del-proyecto)
+- [Componentes Principales](#-componentes-principales)
+- [Sistema de Caché](#-sistema-de-caché)
 - [API Routes](#-api-routes)
+- [Panel de Administración](#-panel-de-administración)
+- [Sistema de Imágenes con Cloudinary](#-sistema-de-imágenes-con-cloudinary)
 - [Sistema de Seguridad](#-sistema-de-seguridad)
 - [Optimizaciones](#-optimizaciones)
 - [Deployment](#-deployment)
+- [Costos y Escalabilidad](#-costos-y-escalabilidad)
 - [Scripts Disponibles](#-scripts-disponibles)
+- [Licencia](#-licencia)
 
 ---
 
