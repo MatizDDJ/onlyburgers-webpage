@@ -7,9 +7,10 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1.14-38B2AC?style=for-the-badge&logo=tailwind-css)
 ![Upstash](https://img.shields.io/badge/Upstash_Redis-00E9A3?style=for-the-badge&logo=redis)
+![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary)
 ![Vercel](https://img.shields.io/badge/Vercel-Deployed-000000?style=for-the-badge&logo=vercel)
 
-**Sitio web moderno para restaurante de hamburguesas con sistema de pedidos online y panel de administración**
+**Sitio web moderno para restaurante de hamburguesas con sistema de pedidos online, panel de administración completo y gestión de imágenes**
 
 [🌐 Ver Demo](https://onlyburgers-webpage.vercel.app) | [📖 Documentación](#-tabla-de-contenidos) | [🚀 Deployment](#-deployment)
 
@@ -21,20 +22,15 @@
 
 - [Características](#-características)
 - [Stack Tecnológico](#-stack-tecnológico)
-- [Arquitectura](#-arquitectura)
 - [Instalación](#-instalación)
 - [Configuración](#-configuración)
-- [Estructura del Proyecto](#-estructura-del-proyecto)
-- [Componentes Principales](#-componentes-principales)
-- [Sistema de Caché](#-sistema-de-caché)
-- [API Routes](#-api-routes)
 - [Panel de Administración](#-panel-de-administración)
+- [Sistema de Imágenes](#-sistema-de-imágenes)
+- [API Routes](#-api-routes)
 - [Sistema de Seguridad](#-sistema-de-seguridad)
 - [Optimizaciones](#-optimizaciones)
 - [Deployment](#-deployment)
-- [Costos y Escalabilidad](#-costos-y-escalabilidad)
 - [Scripts Disponibles](#-scripts-disponibles)
-- [Licencia](#-licencia)
 
 ---
 
@@ -49,6 +45,7 @@
 - ✅ Scroll animations con Intersection Observer
 - ✅ Tema claro/oscuro automático
 - ✅ Optimización para móviles
+- ✅ Sin bordes blancos entre secciones
 
 ### 🛒 **Sistema de Pedidos**
 - ✅ Carrito de compras persistente (localStorage)
@@ -58,26 +55,42 @@
 - ✅ Página de confirmación de pedido
 - ✅ Integración con WhatsApp para envío de pedidos
 
-### 🔐 **Panel de Administración**
+### 🔐 **Panel de Administración COMPLETO**
+- ✅ **Sistema de menú con 3 opciones**: Añadir | Eliminar | Modificar
+- ✅ **Añadir productos**: Formulario completo con validación
+- ✅ **Eliminar productos**: Con confirmación de seguridad (AlertDialog)
+- ✅ **Modificar precios**: Input mejorado (sin bug del primer dígito)
+- ✅ **Subir imágenes**: Integración directa con Cloudinary
+- ✅ **Vista previa**: Preview de imágenes antes de guardar
+- ✅ **Animaciones de éxito**: Delays de 3 segundos antes de volver al menú
 - ✅ Autenticación segura con JWT (24h de validez)
 - ✅ Rate limiting (5 intentos/minuto)
-- ✅ Edición de precios en tiempo real
-- ✅ Interfaz intuitiva con tabs por categorías
-- ✅ Feedback visual (success/error states)
-- ✅ Sesión persistente con localStorage
+- ✅ Sincronización automática con base de datos
+- ✅ Limpieza de caché al guardar cambios
 - ✅ URL personalizada: `/modificarmenu`
 
+### 📸 **Sistema de Imágenes con Cloudinary**
+- ✅ Upload directo desde el panel admin
+- ✅ Drag & drop visual con barra de progreso
+- ✅ Validación de archivos (tipo y tamaño máx 5MB)
+- ✅ Optimización automática de imágenes (1200x900px)
+- ✅ Conversión a WebP automática
+- ✅ CDN global ultra rápido
+- ✅ Opción alternativa para pegar URL
+- ✅ Placeholder automático si no hay imagen
+
 ### ⚡ **Optimización y Performance**
-- ✅ Sistema de caché con localStorage (carga instantánea)
+- ✅ Sistema de caché con localStorage (carga instantánea ~1ms)
 - ✅ Lazy loading de imágenes
 - ✅ Server-Side Rendering (SSR)
 - ✅ API caching strategy
 - ✅ Optimización de bundle con Next.js
-- ✅ Tiempo de carga: ~1ms (con caché)
+- ✅ Imágenes optimizadas con Cloudinary
 
 ### 💾 **Base de Datos**
-- ✅ Upstash Redis para almacenamiento persistente
+- ✅ Upstash Redis para almacenamiento persistente (256 MB gratis)
 - ✅ API Routes para CRUD operations
+- ✅ Guardado automático al añadir/eliminar productos
 - ✅ Sincronización automática entre admin y frontend
 - ✅ Fallback a datos locales si falla la API
 
@@ -96,9 +109,10 @@
 - **Iconos**: [Lucide React](https://lucide.dev/) - Iconos modernos
 
 ### **Backend & Database**
-- **Database**: [Upstash Redis](https://upstash.com/) - Serverless Redis
+- **Database**: [Upstash Redis](https://upstash.com/) - Serverless Redis (256 MB gratis)
 - **API**: Next.js API Routes - Serverless functions
 - **Client**: [@upstash/redis](https://www.npmjs.com/package/@upstash/redis) - Cliente Redis
+- **Image Storage**: [Cloudinary](https://cloudinary.com/) - CDN y optimización de imágenes (25 GB gratis)
 
 ### **Autenticación & Seguridad**
 - **JWT**: [jose](https://www.npmjs.com/package/jose) - JWT signing y verification
@@ -261,6 +275,11 @@ ADMIN_PASSWORD="tu_contraseña_segura_aqui"
 
 # JWT Secret (genera con: openssl rand -base64 32)
 JWT_SECRET="tu_secret_aleatorio_largo_aqui"
+
+# Cloudinary (opcional - para subir imágenes desde el panel)
+CLOUDINARY_CLOUD_NAME="tu_cloud_name"
+CLOUDINARY_API_KEY="tu_api_key"
+CLOUDINARY_API_SECRET="tu_api_secret"
 ```
 
 4. **Inicializar la base de datos**
@@ -289,6 +308,21 @@ Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
 3. Copia las credenciales:
    - **REST API URL** → `KV_REST_API_URL`
    - **REST API TOKEN** → `KV_REST_API_TOKEN`
+
+### **Configurar Cloudinary (Opcional)**
+
+Para subir imágenes directamente desde el panel admin:
+
+1. Ve a [Cloudinary Sign Up](https://cloudinary.com/users/register/free)
+2. Crea una cuenta gratuita (25 GB gratis)
+3. En el Dashboard, copia las credenciales:
+   - **Cloud Name** → `CLOUDINARY_CLOUD_NAME`
+   - **API Key** → `CLOUDINARY_API_KEY`
+   - **API Secret** → `CLOUDINARY_API_SECRET`
+
+4. Agrégalas a `.env.local` y a Vercel Environment Variables
+
+**Nota**: Sin Cloudinary, puedes usar URLs de imágenes externas (Imgur, etc.)
 
 ### **Configurar Panel de Administración**
 
