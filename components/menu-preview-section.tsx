@@ -10,26 +10,45 @@ import Link from "next/link"
 import { menuItems } from "./menu-section"
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer"
 
+const MENU_CACHE_KEY = 'onlyburgers_menu_cache'
+
 export function MenuPreviewSection() {
   const { addItem } = useCart()
   const [addedItemId, setAddedItemId] = useState<string | null>(null)
-  const [menuData, setMenuData] = useState<any>(menuItems)
+  const [menuData, setMenuData] = useState<any>(menuItems) // Usar datos locales por defecto
   const { elementRef: titleRef, isVisible: titleVisible } = useIntersectionObserver({ threshold: 0.2 })
   const { elementRef: cardsRef, isVisible: cardsVisible } = useIntersectionObserver({ threshold: 0.1 })
   const { elementRef: buttonRef, isVisible: buttonVisible } = useIntersectionObserver({ threshold: 0.2 })
 
   useEffect(() => {
-    async function fetchMenu() {
+    async function loadMenu() {
+      // 1. Intentar cargar desde localStorage primero (instantáneo)
+      try {
+        const cachedMenu = localStorage.getItem(MENU_CACHE_KEY)
+        if (cachedMenu) {
+          setMenuData(JSON.parse(cachedMenu))
+        }
+      } catch (error) {
+        console.error('Error loading cached menu:', error)
+      }
+
+      // 2. Fetch API en background (actualizar si hay cambios)
       try {
         const response = await fetch('/api/menu')
         const data = await response.json()
+        
+        // Guardar en localStorage para próxima vez
+        localStorage.setItem(MENU_CACHE_KEY, JSON.stringify(data))
+        
+        // Actualizar estado
         setMenuData(data)
       } catch (error) {
         console.error('Error fetching menu:', error)
-        // Mantener datos locales si falla la API
+        // Mantener datos actuales si falla la API
       }
     }
-    fetchMenu()
+    
+    loadMenu()
   }, [])
 
   // Mostrar solo las hamburguesas populares

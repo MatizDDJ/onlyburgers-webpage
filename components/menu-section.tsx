@@ -237,24 +237,65 @@ export const menuItems = {
   ],
 }
 
+const MENU_CACHE_KEY = 'onlyburgers_menu_cache'
+
 export function MenuSection() {
   const { addItem } = useCart()
   const [addedItemId, setAddedItemId] = useState<string | null>(null)
   const [selectedItem, setSelectedItem] = useState<any | null>(null)
-  const [menuData, setMenuData] = useState<typeof menuItems>(menuItems)
+  const [menuData, setMenuData] = useState<typeof menuItems | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState<string>("hamburguesas")
+
+  // Cargar tab activa desde localStorage al montar
+  useEffect(() => {
+    const savedTab = localStorage.getItem('menu_active_tab')
+    if (savedTab) {
+      setActiveTab(savedTab)
+    }
+  }, [])
+
+  // Guardar tab activa en localStorage cuando cambie
+  const handleTabChange = (value: string) => {
+    setActiveTab(value)
+    localStorage.setItem('menu_active_tab', value)
+  }
 
   useEffect(() => {
-    async function fetchMenu() {
+    async function loadMenu() {
+      // 1. Intentar cargar desde localStorage primero (instantáneo)
+      try {
+        const cachedMenu = localStorage.getItem(MENU_CACHE_KEY)
+        if (cachedMenu) {
+          setMenuData(JSON.parse(cachedMenu))
+          setLoading(false)
+        }
+      } catch (error) {
+        console.error('Error loading cached menu:', error)
+      }
+
+      // 2. Fetch API en background (actualizar si hay cambios)
       try {
         const response = await fetch('/api/menu')
         const data = await response.json()
+        
+        // Guardar en localStorage para próxima vez
+        localStorage.setItem(MENU_CACHE_KEY, JSON.stringify(data))
+        
+        // Actualizar estado (solo si cambió)
         setMenuData(data)
       } catch (error) {
         console.error('Error fetching menu:', error)
-        // Mantener datos locales si falla la API
+        // Si no había caché y falla API, usar datos locales
+        if (!localStorage.getItem(MENU_CACHE_KEY)) {
+          setMenuData(menuItems)
+        }
+      } finally {
+        setLoading(false)
       }
     }
-    fetchMenu()
+    
+    loadMenu()
   }, [])
 
   const handleAddToCart = (item: any) => {
@@ -330,6 +371,19 @@ export function MenuSection() {
     </div>
   )
 
+  if (loading || !menuData) {
+    return (
+      <section id="menu" className="py-12 md:py-20 bg-secondary/30 w-full">
+        <div className="container mx-auto px-4 max-w-7xl flex items-center justify-center min-h-[400px]">
+          <div className="flex flex-col items-center gap-4">
+            <Loader2 className="h-12 w-12 animate-spin text-primary" />
+            <p className="text-lg text-muted-foreground">Cargando menú...</p>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   return (
     <section id="menu" className="py-12 md:py-20 bg-secondary/30 w-full">
       <div className="container mx-auto px-4 max-w-7xl">
@@ -347,7 +401,7 @@ export function MenuSection() {
           </div>
         </div>
 
-        <Tabs defaultValue="hamburguesas" className="w-full">
+        <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-8 h-auto">
             <TabsTrigger value="hamburguesas" className="text-sm md:text-base py-3">
               Hamburguesas

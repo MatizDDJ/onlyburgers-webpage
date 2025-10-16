@@ -138,6 +138,9 @@ export default function ModificarMenuPage() {
       const result = await response.json()
 
       if (response.ok) {
+        // Limpiar caché del menú para que se actualice en la página principal
+        localStorage.removeItem('onlyburgers_menu_cache')
+        
         setSaveStatus("success")
         setTimeout(() => setSaveStatus("idle"), 3000)
       } else {
