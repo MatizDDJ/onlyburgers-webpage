@@ -404,7 +404,8 @@ export default function ModificarMenuPage() {
   }
   
   const handleDeleteProduct = async () => {
-    if (!menuData || !deleteCategory || !itemToDelete) return
+    // Prevenir clicks múltiples
+    if (!menuData || !deleteCategory || !itemToDelete || loading) return
     
     const updatedMenuData = {
       ...menuData,
@@ -436,14 +437,17 @@ export default function ModificarMenuPage() {
         
         setItemToDelete(null)
         setDeleteCategory("")
-        setSaveStatus("success")
         setErrorMessage("")
         
-        // Esperar 3 segundos antes de volver
+        // Mostrar overlay de éxito
+        setSuccessMessage("¡Producto eliminado correctamente!")
+        setShowSuccessOverlay(true)
+        
         setTimeout(() => {
+          setShowSuccessOverlay(false)
           setSaveStatus("idle")
           setCurrentView("menu")
-        }, 3000)
+        }, 2500)
       } else {
         if (response.status === 401) {
           setErrorMessage("Sesión expirada. Por favor, inicia sesión nuevamente.")
@@ -1007,16 +1011,40 @@ export default function ModificarMenuPage() {
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                <AlertDialogCancel disabled={loading}>Cancelar</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={handleDeleteProduct}
+                  disabled={loading}
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                 >
-                  Eliminar
+                  {loading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Eliminando...
+                    </>
+                  ) : (
+                    "Eliminar"
+                  )}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
+
+          {/* Overlay de éxito */}
+          {showSuccessOverlay && (
+            <div className="fixed inset-0 z-[10002] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+              <div className="flex flex-col items-center gap-4 animate-in zoom-in-95 duration-500">
+                <div className="bg-green-600 rounded-full p-6 shadow-2xl animate-in zoom-in-50 duration-700">
+                  <Check className="h-20 w-20 md:h-24 md:w-24 text-white animate-in zoom-in-0 duration-500 delay-200" strokeWidth={3} />
+                </div>
+                <div className="bg-background/95 backdrop-blur-sm rounded-lg px-8 py-4 shadow-xl animate-in slide-in-from-bottom-4 duration-500 delay-300">
+                  <p className="text-xl md:text-2xl font-bold text-center text-foreground">
+                    {successMessage}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     )
