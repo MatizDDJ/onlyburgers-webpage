@@ -235,6 +235,22 @@ export default function ModificarMenuPage() {
       ),
     })
   }
+
+  const handleFieldChange = (
+    category: keyof MenuData,
+    itemId: string,
+    field: keyof MenuItem,
+    value: string | boolean
+  ) => {
+    if (!menuData) return
+
+    setMenuData({
+      ...menuData,
+      [category]: menuData[category].map((item) =>
+        item.id === itemId ? { ...item, [field]: value } : item
+      ),
+    })
+  }
   
   const handleAddProduct = async () => {
     if (!menuData || !newProduct.category || !newProduct.name || !newProduct.price) {
@@ -940,8 +956,36 @@ export default function ModificarMenuPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center gap-4">
-              <div className="flex-1">
+            <div className="space-y-4">
+              {/* Nombre */}
+              <div>
+                <Label htmlFor={`name-${item.id}`} className="text-sm">
+                  Nombre
+                </Label>
+                <Input
+                  id={`name-${item.id}`}
+                  type="text"
+                  value={item.name}
+                  onChange={(e) => handleFieldChange(category, item.id, 'name', e.target.value)}
+                  className="mt-1"
+                />
+              </div>
+
+              {/* Descripción */}
+              <div>
+                <Label htmlFor={`description-${item.id}`} className="text-sm">
+                  Descripción
+                </Label>
+                <Textarea
+                  id={`description-${item.id}`}
+                  value={item.description}
+                  onChange={(e) => handleFieldChange(category, item.id, 'description', e.target.value)}
+                  className="mt-1 min-h-[80px]"
+                />
+              </div>
+
+              {/* Precio */}
+              <div>
                 <Label htmlFor={`price-${item.id}`} className="text-sm">
                   Precio ($U)
                 </Label>
@@ -975,6 +1019,50 @@ export default function ModificarMenuPage() {
                   placeholder="0"
                 />
               </div>
+
+              {/* Imagen URL */}
+              <div>
+                <Label htmlFor={`image-${item.id}`} className="text-sm">
+                  URL de Imagen
+                </Label>
+                <Input
+                  id={`image-${item.id}`}
+                  type="text"
+                  value={item.image}
+                  onChange={(e) => handleFieldChange(category, item.id, 'image', e.target.value)}
+                  className="mt-1"
+                  placeholder="/ruta-de-imagen.jpg"
+                />
+              </div>
+
+              {/* Checkboxes */}
+              <div className="space-y-3 pt-2">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`popular-${item.id}`}
+                    checked={item.popular}
+                    onCheckedChange={(checked) =>
+                      handleFieldChange(category, item.id, 'popular', checked as boolean)
+                    }
+                  />
+                  <Label htmlFor={`popular-${item.id}`} className="cursor-pointer text-sm">
+                    Marcar como producto popular
+                  </Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`fries-${item.id}`}
+                    checked={item.includesFries}
+                    onCheckedChange={(checked) =>
+                      handleFieldChange(category, item.id, 'includesFries', checked as boolean)
+                    }
+                  />
+                  <Label htmlFor={`fries-${item.id}`} className="cursor-pointer text-sm">
+                    🍟 Incluye papas fritas gratis
+                  </Label>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -996,10 +1084,10 @@ export default function ModificarMenuPage() {
 
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold mb-2 font-[family-name:var(--font-display)]">
-            Modificar Precios del Menú
+            Editar Productos del Menú
           </h1>
           <p className="text-muted-foreground">
-            Edita los precios de los productos. Los cambios se guardarán al hacer click en
+            Edita nombre, descripción, precio, imagen y características de los productos. Los cambios se guardarán al hacer click en
             &quot;Guardar Cambios&quot;.
           </p>
         </div>
