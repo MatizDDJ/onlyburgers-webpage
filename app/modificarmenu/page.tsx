@@ -44,6 +44,7 @@ interface MenuData {
   bebidas: MenuItem[]
   milanesas: MenuItem[]
   papas: MenuItem[]
+  promos: MenuItem[]
 }
 
 type AdminView = "menu" | "add" | "delete" | "edit"
@@ -618,6 +619,7 @@ export default function ModificarMenuPage() {
                     <SelectItem value="bebidas">Bebidas</SelectItem>
                     <SelectItem value="milanesas">Milanesas</SelectItem>
                     <SelectItem value="papas">Papas Fritas</SelectItem>
+                    <SelectItem value="promos">Promos</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -830,14 +832,15 @@ export default function ModificarMenuPage() {
           )}
 
           <Tabs defaultValue="hamburguesas" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-8">
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 mb-8">
               <TabsTrigger value="hamburguesas">Hamburguesas</TabsTrigger>
               <TabsTrigger value="bebidas">Bebidas</TabsTrigger>
               <TabsTrigger value="milanesas">Milanesas</TabsTrigger>
               <TabsTrigger value="papas">Papas Fritas</TabsTrigger>
+              <TabsTrigger value="promos">Promos</TabsTrigger>
             </TabsList>
 
-            {(["hamburguesas", "bebidas", "milanesas", "papas"] as const).map((category) => (
+            {(["hamburguesas", "bebidas", "milanesas", "papas", "promos"] as const).map((category) => (
               <TabsContent key={category} value={category}>
                 <div className="grid gap-4 md:grid-cols-2">
                   {menuData[category].map((item) => (
@@ -1018,11 +1021,12 @@ export default function ModificarMenuPage() {
         )}
 
         <Tabs defaultValue="hamburguesas" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-8">
+          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 mb-8">
             <TabsTrigger value="hamburguesas">Hamburguesas</TabsTrigger>
             <TabsTrigger value="bebidas">Bebidas</TabsTrigger>
             <TabsTrigger value="milanesas">Milanesas</TabsTrigger>
             <TabsTrigger value="papas">Papas Fritas</TabsTrigger>
+            <TabsTrigger value="promos">Promos</TabsTrigger>
           </TabsList>
 
           <TabsContent value="hamburguesas">
@@ -1039,6 +1043,10 @@ export default function ModificarMenuPage() {
 
           <TabsContent value="papas">
             {renderCategoryItems("papas")}
+          </TabsContent>
+
+          <TabsContent value="promos">
+            {renderCategoryItems("promos")}
           </TabsContent>
         </Tabs>
 

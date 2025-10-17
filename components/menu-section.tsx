@@ -214,25 +214,31 @@ export const menuItems = {
   ],
   promos: [
     {
-      id: "promo-familiar",
-      name: "Papas Fritas Clásicas",
-      description: "Porción grande de papas fritas crujientes",
-      price: 180,
-      image: "/crispy-french-fries-portion.jpg",
+      id: "combo-clasico",
+      name: "Combo Clásico",
+      description: "Burguer Classic + Papas Fritas + Coca-Cola 600ml",
+      price: 400,
+      image: "/classic-cheeseburger-with-melted-cheese.jpg",
+      popular: true,
+      includesFries: true,
     },
     {
-      id: "papas-cheddar",
-      name: "Papas con Cheddar y Bacon",
-      description: "Papas fritas con queso cheddar derretido y bacon",
-      price: 250,
-      image: "/loaded-fries-with-cheddar-and-bacon.jpg",
+      id: "combo-especial",
+      name: "Combo Especial",
+      description: "Special Burguer + Papas Fritas + Bebida 600ml a elección",
+      price: 480,
+      image: "/bbq-bacon-burger.jpg",
+      popular: true,
+      includesFries: true,
     },
     {
-      id: "papas-rusticas",
-      name: "Papas Rústicas",
-      description: "Papas con piel, especias y hierbas",
-      price: 200,
-      image: "/rustic-potato-wedges-with-herbs.jpg",
+      id: "combo-duo",
+      name: "Combo Dúo",
+      description: "2 Burguer Classic + 2 Papas Fritas + Coca-Cola 1.5L",
+      price: 750,
+      image: "/delicious-gourmet-burger-with-melted-cheese-and-fr.jpg",
+      popular: true,
+      includesFries: true,
     },
   ],
 }
@@ -318,7 +324,7 @@ export function MenuSection() {
 
   const renderMenuItems = (items: any[], showFreeFries = false) => (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {items.map((item) => (
+      {items?.map((item) => (
         <Card
           key={item.id}
           className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border-2 flex flex-col h-full"
@@ -402,17 +408,20 @@ export function MenuSection() {
         </div>
 
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-8 h-auto">
-            <TabsTrigger value="hamburguesas" className="text-sm md:text-base py-3">
+          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 mb-8 h-auto">
+            <TabsTrigger value="hamburguesas" className="text-sm md:text-base py-3 order-1">
               Hamburguesas
             </TabsTrigger>
-            <TabsTrigger value="bebidas" className="text-sm md:text-base py-3">
+            <TabsTrigger value="bebidas" className="text-sm md:text-base py-3 order-2">
               Bebidas
             </TabsTrigger>
-            <TabsTrigger value="milanesas" className="text-sm md:text-base py-3">
+            <TabsTrigger value="milanesas" className="text-sm md:text-base py-3 order-3">
               Milanesas
             </TabsTrigger>
-            <TabsTrigger value="papas" className="text-sm md:text-base py-3">
+            <TabsTrigger value="promos" className="text-sm md:text-base py-3 order-5 lg:order-5">
+              Promos
+            </TabsTrigger>
+            <TabsTrigger value="papas" className="text-sm md:text-base py-3 order-4 lg:order-4">
               Papas Fritas
             </TabsTrigger>
           </TabsList>
@@ -455,6 +464,22 @@ export function MenuSection() {
               NUESTRAS PAPAS FRITAS
             </h3>
             {renderMenuItems(menuData.papas)}
+          </TabsContent>
+
+          <TabsContent 
+            value="promos" 
+            className="space-y-6 animate-in fade-in-0 duration-300"
+          >
+            <h3 className="text-2xl font-bold text-center mb-6 font-[family-name:var(--font-display)]">
+              NUESTRAS PROMOS
+            </h3>
+            {menuData.promos && menuData.promos.length > 0 ? (
+              renderMenuItems(menuData.promos)
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">No hay promos disponibles en este momento.</p>
+              </div>
+            )}
           </TabsContent>
         </Tabs>
 

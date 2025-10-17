@@ -231,5 +231,34 @@
       "popular": false,
       "includesFries": false
     }
+  ],
+  "promos": [
+    {
+      "id": "combo-clasico",
+      "name": "Combo Clásico",
+      "description": "Burguer Classic + Papas Fritas + Coca-Cola 600ml",
+      "price": 400,
+      "image": "/classic-cheeseburger-with-melted-cheese.jpg",
+      "popular": true,
+      "includesFries": true
+    },
+    {
+      "id": "combo-especial",
+      "name": "Combo Especial",
+      "description": "Special Burguer + Papas Fritas + Bebida 600ml a elección",
+      "price": 480,
+      "image": "/bbq-bacon-burger.jpg",
+      "popular": true,
+      "includesFries": true
+    },
+    {
+      "id": "combo-duo",
+      "name": "Combo Dúo",
+      "description": "2 Burguer Classic + 2 Papas Fritas + Coca-Cola 1.5L",
+      "price": 750,
+      "image": "/delicious-gourmet-burger-with-melted-cheese-and-fr.jpg",
+      "popular": true,
+      "includesFries": true
+    }
   ]
 }

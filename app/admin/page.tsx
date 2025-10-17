@@ -25,6 +25,7 @@ interface MenuData {
   bebidas: MenuItem[]
   milanesas: MenuItem[]
   papas: MenuItem[]
+  promos: MenuItem[]
 }
 
 export default function AdminPage() {
@@ -255,11 +256,12 @@ export default function AdminPage() {
         )}
 
         <Tabs defaultValue="hamburguesas" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-8">
+          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 mb-8">
             <TabsTrigger value="hamburguesas">Hamburguesas</TabsTrigger>
             <TabsTrigger value="bebidas">Bebidas</TabsTrigger>
             <TabsTrigger value="milanesas">Milanesas</TabsTrigger>
             <TabsTrigger value="papas">Papas Fritas</TabsTrigger>
+            <TabsTrigger value="promos">Promos</TabsTrigger>
           </TabsList>
 
           <TabsContent value="hamburguesas">
@@ -276,6 +278,10 @@ export default function AdminPage() {
 
           <TabsContent value="papas">
             {renderCategoryItems("papas")}
+          </TabsContent>
+
+          <TabsContent value="promos">
+            {renderCategoryItems("promos")}
           </TabsContent>
         </Tabs>
 
