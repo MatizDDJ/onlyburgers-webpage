@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Lock, Save, Loader2, CheckCircle, XCircle, Shield, Plus, Trash2, Edit, ArrowLeft } from "lucide-react"
+import { Lock, Save, Loader2, CheckCircle, XCircle, Shield, Plus, Trash2, Edit, ArrowLeft, Upload } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import {
   Select,
@@ -86,6 +86,7 @@ export default function ModificarMenuPage() {
   // Estados para upload de imagen
   const [uploadingImage, setUploadingImage] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
+  const [uploadingItemId, setUploadingItemId] = useState<string | null>(null)
 
   useEffect(() => {
     // Verificar si hay token guardado en localStorage
@@ -208,6 +209,64 @@ export default function ModificarMenuPage() {
       console.error('Error uploading image:', error)
       setErrorMessage('Error al subir la imagen')
       setUploadingImage(false)
+    }
+  }
+  
+  const handleImageUploadForEdit = async (file: File, category: keyof MenuData, itemId: string) => {
+    if (!file || !menuData) return
+    
+    // Validar tipo de archivo
+    if (!file.type.startsWith('image/')) {
+      setErrorMessage('Por favor selecciona un archivo de imagen válido')
+      return
+    }
+    
+    // Validar tamaño (máximo 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setErrorMessage('La imagen es muy grande. Máximo 5MB.')
+      return
+    }
+    
+    setUploadingItemId(itemId)
+    setUploadProgress(0)
+    setErrorMessage('')
+    
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      
+      // Simular progreso
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => Math.min(prev + 10, 90))
+      }, 200)
+      
+      const response = await fetch('/api/upload-image', {
+        method: 'POST',
+        body: formData,
+      })
+      
+      clearInterval(progressInterval)
+      
+      const data = await response.json()
+      
+      if (response.ok) {
+        setUploadProgress(100)
+        
+        // Actualizar la imagen del item
+        handleFieldChange(category, itemId, 'image', data.url)
+        
+        setTimeout(() => {
+          setUploadProgress(0)
+          setUploadingItemId(null)
+        }, 500)
+      } else {
+        setErrorMessage(data.error || 'Error al subir la imagen')
+        setUploadingItemId(null)
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error)
+      setErrorMessage('Error al subir la imagen')
+      setUploadingItemId(null)
     }
   }
 
@@ -1023,16 +1082,82 @@ export default function ModificarMenuPage() {
               {/* Imagen URL */}
               <div>
                 <Label htmlFor={`image-${item.id}`} className="text-sm">
-                  URL de Imagen
+                  Imagen del Producto
                 </Label>
-                <Input
-                  id={`image-${item.id}`}
-                  type="text"
-                  value={item.image}
-                  onChange={(e) => handleFieldChange(category, item.id, 'image', e.target.value)}
-                  className="mt-1"
-                  placeholder="/ruta-de-imagen.jpg"
-                />
+                
+                {/* Mostrar vista previa de la imagen actual */}
+                {item.image && (
+                  <div className="mt-2 relative w-full h-32 rounded-lg overflow-hidden border-2 border-border mb-2">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+                
+                <div className="space-y-2 mt-2">
+                  {/* Botón para subir nueva imagen */}
+                  <div className="flex gap-2">
+                    <div className="flex-1">
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0]
+                          if (file) handleImageUploadForEdit(file, category, item.id)
+                        }}
+                        disabled={uploadingItemId === item.id}
+                        className="hidden"
+                        id={`image-upload-${item.id}`}
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full"
+                        onClick={() => document.getElementById(`image-upload-${item.id}`)?.click()}
+                        disabled={uploadingItemId === item.id}
+                      >
+                        {uploadingItemId === item.id ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Subiendo... {uploadProgress}%
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="h-4 w-4 mr-2" />
+                            Subir Imagen
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  {/* Barra de progreso */}
+                  {uploadingItemId === item.id && (
+                    <div className="w-full bg-secondary rounded-full h-2">
+                      <div
+                        className="bg-primary h-2 rounded-full transition-all duration-300"
+                        style={{ width: `${uploadProgress}%` }}
+                      />
+                    </div>
+                  )}
+                  
+                  {/* Input manual para URL */}
+                  <div className="space-y-1">
+                    <div className="text-center">
+                      <span className="text-xs text-muted-foreground">o ingresa URL manualmente</span>
+                    </div>
+                    <Input
+                      id={`image-${item.id}`}
+                      type="text"
+                      value={item.image}
+                      onChange={(e) => handleFieldChange(category, item.id, 'image', e.target.value)}
+                      placeholder="/ruta-de-imagen.jpg o https://..."
+                      disabled={uploadingItemId === item.id}
+                    />
+                  </div>
+                </div>
               </div>
 
               {/* Checkboxes */}
