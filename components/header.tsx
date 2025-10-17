@@ -2,13 +2,22 @@
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Menu, ShoppingCart } from "lucide-react"
+import { Menu, ShoppingCart, X } from "lucide-react"
 import { useCart } from "@/lib/cart-context"
 import { Badge } from "@/components/ui/badge"
+import { useState } from "react"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
 
 export function Header() {
   const { items } = useCart()
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
     <header 
@@ -55,9 +64,76 @@ export function Header() {
           <Link href="/order">
             <Button className="hidden md:inline-flex">Ordenar Ahora</Button>
           </Link>
-          <Button variant="ghost" size="icon" className="md:hidden">
-            <Menu className="h-5 w-5" />
-          </Button>
+          
+          {/* Menú móvil */}
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="md:hidden">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[280px] sm:w-[350px] p-0">
+              <div className="flex flex-col h-full">
+                {/* Header del menú */}
+                <SheetHeader className="p-6 pb-4 border-b">
+                  <SheetTitle className="text-2xl font-bold text-primary font-[family-name:var(--font-display)] text-left">
+                    ONLY BURGUERS
+                  </SheetTitle>
+                  <p className="text-sm text-muted-foreground text-left">
+                    Las mejores hamburguesas artesanales
+                  </p>
+                </SheetHeader>
+
+                {/* Navegación */}
+                <nav className="flex-1 px-6 py-6">
+                  <div className="flex flex-col gap-2">
+                    <Link 
+                      href="/menu" 
+                      className="text-base font-medium hover:text-primary transition-colors py-3 px-4 rounded-lg hover:bg-secondary/50"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Menú Completo
+                    </Link>
+                    <Link 
+                      href="/#about" 
+                      className="text-base font-medium hover:text-primary transition-colors py-3 px-4 rounded-lg hover:bg-secondary/50"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Nosotros
+                    </Link>
+                    <Link 
+                      href="/#contact" 
+                      className="text-base font-medium hover:text-primary transition-colors py-3 px-4 rounded-lg hover:bg-secondary/50"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Contacto
+                    </Link>
+                  </div>
+                </nav>
+
+                {/* Footer del menú con botón de ordenar - sobresale */}
+                <div className="p-6 pt-4 border-t bg-primary/5 mt-auto">
+                  <Link 
+                    href="/order" 
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Button className="w-full h-12 text-base font-semibold shadow-lg hover:shadow-xl transition-shadow">
+                      <ShoppingCart className="h-5 w-5 mr-2" />
+                      Ordenar Ahora
+                      {itemCount > 0 && (
+                        <Badge className="ml-2 bg-white text-primary hover:bg-white">
+                          {itemCount}
+                        </Badge>
+                      )}
+                    </Button>
+                  </Link>
+                  <p className="text-xs text-center text-muted-foreground mt-3">
+                    Delivery disponible 🚚
+                  </p>
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </header>
