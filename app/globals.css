@@ -341,15 +341,65 @@
 
 /* Added cart notification styles */
 .cart-notification {
-  animation: slideInRight 0.3s ease-out;
+  animation: fadeIn 0.3s ease-out;
 }
 
 .cart-notification.exit {
-  animation: slideOutRight 0.3s ease-in;
+  animation: fadeOut 0.3s ease-in;
+}
+
+.cart-notification .checkmark-container {
+  animation: scaleIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 .cart-notification .checkmark {
-  animation: checkmark 0.5s ease-out;
+  animation: checkmarkDraw 0.5s ease-out 0.2s backwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes scaleIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes checkmarkDraw {
+  0% {
+    stroke-dasharray: 0, 100;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dasharray: 100, 100;
+    opacity: 1;
+  }
 }
 
 /* Added smooth scroll behavior */

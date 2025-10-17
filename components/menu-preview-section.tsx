@@ -15,6 +15,7 @@ const MENU_CACHE_KEY = 'onlyburgers_menu_cache'
 export function MenuPreviewSection() {
   const { addItem } = useCart()
   const [addedItemId, setAddedItemId] = useState<string | null>(null)
+  const [isAnimating, setIsAnimating] = useState(false)
   const [menuData, setMenuData] = useState<any>(menuItems) // Usar datos locales por defecto
   const { elementRef: titleRef, isVisible: titleVisible } = useIntersectionObserver({ threshold: 0.2 })
   const { elementRef: cardsRef, isVisible: cardsVisible } = useIntersectionObserver({ threshold: 0.1 })
@@ -55,6 +56,9 @@ export function MenuPreviewSection() {
   const featuredBurgers = menuData?.hamburguesas?.filter((item: any) => item.popular).slice(0, 3) || []
 
   const handleAddToCart = (item: any) => {
+    // Prevenir clicks múltiples mientras hay animación en curso
+    if (isAnimating) return
+    
     addItem({
       id: item.id,
       name: item.name,
@@ -64,9 +68,12 @@ export function MenuPreviewSection() {
     })
 
     setAddedItemId(item.id)
+    setIsAnimating(true)
+    
     setTimeout(() => {
       setAddedItemId(null)
-    }, 2000)
+      setIsAnimating(false)
+    }, 1500) // Duración total de la animación
   }
 
   return (
@@ -115,9 +122,10 @@ export function MenuPreviewSection() {
                   </Badge>
                 )}
                 {addedItemId === item.id && (
-                  <div className="absolute top-4 left-4 bg-green-600 text-white px-4 py-2 rounded-full shadow-lg z-10 cart-notification flex items-center gap-2">
-                    <Check className="h-4 w-4 checkmark" />
-                    <span className="text-sm font-semibold">Agregado</span>
+                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-20 cart-notification">
+                    <div className="bg-green-600 rounded-full p-4 shadow-2xl checkmark-container">
+                      <Check className="h-12 w-12 md:h-16 md:w-16 text-white checkmark" strokeWidth={3} />
+                    </div>
                   </div>
                 )}
               </div>
