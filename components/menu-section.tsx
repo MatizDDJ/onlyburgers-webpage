@@ -343,18 +343,21 @@ export function MenuSection() {
                 Ver detalles
               </span>
             </div>
-            {item.popular && (
-              <Badge className="absolute top-4 right-4 bg-primary text-primary-foreground shadow-lg z-10">
-                Popular
-              </Badge>
-            )}
-            {item.includesFries && (
-              <Badge className="absolute top-4 left-4 bg-green-600 text-white shadow-lg z-10">
-                🍟 Incluye Papas Gratis
-              </Badge>
-            )}
+            {/* Badges container */}
+            <div className="absolute top-3 left-3 right-3 flex flex-wrap gap-2 z-10">
+              {item.popular && (
+                <Badge className="bg-primary text-primary-foreground shadow-lg">
+                  Popular
+                </Badge>
+              )}
+              {item.includesFries && (
+                <Badge className="bg-green-600 text-white shadow-lg">
+                  🍟 Incluye Papas Gratis
+                </Badge>
+              )}
+            </div>
             {addedItemId === item.id && (
-              <div className="absolute top-4 left-4 bg-green-600 text-white px-4 py-2 rounded-full shadow-lg z-10 cart-notification flex items-center gap-2">
+              <div className="absolute top-4 left-4 bg-green-600 text-white px-4 py-2 rounded-full shadow-lg z-20 cart-notification flex items-center gap-2">
                 <Check className="h-4 w-4 checkmark" />
                 <span className="text-sm font-semibold">Agregado</span>
               </div>
@@ -485,58 +488,60 @@ export function MenuSection() {
 
         {/* Modal de detalles del producto */}
         <Dialog open={selectedItem !== null} onOpenChange={(open) => !open && setSelectedItem(null)}>
-          <DialogContent className="max-w-md md:max-w-2xl max-h-[85vh] overflow-y-auto animate-in fade-in-0 zoom-in-95 duration-300">
+          <DialogContent className="max-w-md md:max-w-2xl animate-in fade-in-0 zoom-in-95 duration-300 p-4 md:p-6">
             {selectedItem && (
-              <>
-                <DialogHeader>
-                  <DialogTitle className="text-xl md:text-3xl font-bold font-[family-name:var(--font-display)]">
+              <div className="flex flex-col gap-3 md:gap-4">
+                <DialogHeader className="space-y-1 md:space-y-2">
+                  <DialogTitle className="text-lg md:text-2xl font-bold font-[family-name:var(--font-display)]">
                     {selectedItem.name}
                   </DialogTitle>
-                  <DialogDescription className="text-sm md:text-lg">
+                  <DialogDescription className="text-xs md:text-base line-clamp-2">
                     {selectedItem.description}
                   </DialogDescription>
                 </DialogHeader>
 
-                <div className="relative aspect-video overflow-hidden rounded-lg bg-muted">
+                <div className="relative w-full aspect-video overflow-hidden rounded-lg bg-muted">
                   <img
                     src={selectedItem.image || "/placeholder.svg"}
                     alt={selectedItem.name}
                     className="object-cover w-full h-full"
                   />
-                  {selectedItem.popular && (
-                    <Badge className="absolute top-2 right-2 md:top-4 md:right-4 bg-primary text-primary-foreground shadow-lg text-xs md:text-sm">
-                      Popular
-                    </Badge>
-                  )}
-                  {selectedItem.includesFries && (
-                    <Badge className="absolute top-2 left-2 md:top-4 md:left-4 bg-green-600 text-white shadow-lg text-xs md:text-sm">
-                      🍟 Incluye Papas Gratis
-                    </Badge>
-                  )}
+                  <div className="absolute top-2 left-2 right-2 flex flex-wrap gap-1.5 z-10">
+                    {selectedItem.popular && (
+                      <Badge className="bg-primary text-primary-foreground shadow-lg text-[10px] md:text-xs px-2 py-0.5">
+                        Popular
+                      </Badge>
+                    )}
+                    {selectedItem.includesFries && (
+                      <Badge className="bg-green-600 text-white shadow-lg text-[10px] md:text-xs px-2 py-0.5">
+                        🍟 Incluye Papas Gratis
+                      </Badge>
+                    )}
+                  </div>
                 </div>
 
-                <div className="flex items-center justify-center py-2 md:py-4">
-                  <span className="text-3xl md:text-4xl font-bold text-primary">$U {selectedItem.price}</span>
+                <div className="flex items-center justify-center py-1">
+                  <span className="text-2xl md:text-3xl font-bold text-primary">$U {selectedItem.price}</span>
                 </div>
 
-                <DialogFooter className="flex flex-col sm:flex-row gap-2 md:gap-3">
+                <DialogFooter className="flex flex-col sm:flex-row gap-2">
                   <Button
                     variant="outline"
                     onClick={() => setSelectedItem(null)}
-                    className="flex-1 text-sm md:text-base py-4 md:py-6"
+                    className="flex-1 text-sm md:text-base py-3 md:py-4"
                   >
-                    <X className="h-4 w-4 md:h-5 md:w-5 mr-2" />
+                    <X className="h-4 w-4 mr-2" />
                     Cancelar
                   </Button>
                   <Button
                     onClick={() => handleAddToCart(selectedItem)}
-                    className="flex-1 text-sm md:text-base py-4 md:py-6 shadow-md"
+                    className="flex-1 text-sm md:text-base py-3 md:py-4 shadow-md"
                   >
-                    <Plus className="h-4 w-4 md:h-5 md:w-5 mr-2" />
+                    <Plus className="h-4 w-4 mr-2" />
                     Agregar al Carrito
                   </Button>
                 </DialogFooter>
-              </>
+              </div>
             )}
           </DialogContent>
         </Dialog>
