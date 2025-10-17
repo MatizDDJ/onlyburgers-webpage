@@ -985,33 +985,51 @@ export default function ModificarMenuPage() {
     <div className="space-y-4">
       {menuData[category].map((item) => (
         <Card key={item.id}>
-          <CardHeader>
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <CardTitle className="text-lg">{item.name}</CardTitle>
-                <CardDescription className="text-sm mt-1">
-                  {item.description}
-                </CardDescription>
-                <div className="flex gap-2 mt-2">
-                  {item.popular && (
-                    <Badge variant="default" className="text-xs">
-                      Popular
-                    </Badge>
-                  )}
-                  {item.includesFries && (
-                    <Badge variant="secondary" className="text-xs">
-                      🍟 Incluye Papas
-                    </Badge>
-                  )}
-                </div>
-              </div>
+          <CardHeader className="pb-3">
+            <div className="flex flex-col gap-3">
+              {/* Imagen arriba en mobile */}
               {item.image && (
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-20 h-20 object-cover rounded-lg ml-4"
-                />
+                <div className="w-full sm:hidden">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-40 object-cover rounded-lg"
+                  />
+                </div>
               )}
+              
+              {/* Contenido principal */}
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex-1">
+                  <CardTitle className="text-lg">{item.name}</CardTitle>
+                  <CardDescription className="text-sm mt-1">
+                    {item.description}
+                  </CardDescription>
+                  <div className="flex gap-2 mt-2 flex-wrap">
+                    {item.popular && (
+                      <Badge variant="default" className="text-xs">
+                        Popular
+                      </Badge>
+                    )}
+                    {item.includesFries && (
+                      <Badge variant="secondary" className="text-xs">
+                        🍟 Incluye Papas
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+                
+                {/* Imagen al lado solo en desktop */}
+                {item.image && (
+                  <div className="hidden sm:block flex-shrink-0">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-24 h-24 object-cover rounded-lg"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           </CardHeader>
           <CardContent>
@@ -1087,7 +1105,7 @@ export default function ModificarMenuPage() {
                 
                 {/* Mostrar vista previa de la imagen actual */}
                 {item.image && (
-                  <div className="mt-2 relative w-full h-32 rounded-lg overflow-hidden border-2 border-border mb-2">
+                  <div className="mt-2 relative w-full h-48 sm:h-40 rounded-lg overflow-hidden border-2 border-border mb-2">
                     <img
                       src={item.image}
                       alt={item.name}
@@ -1234,33 +1252,47 @@ export default function ModificarMenuPage() {
         )}
 
         <Tabs defaultValue="hamburguesas" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 mb-8">
-            <TabsTrigger value="hamburguesas">Hamburguesas</TabsTrigger>
-            <TabsTrigger value="bebidas">Bebidas</TabsTrigger>
-            <TabsTrigger value="milanesas">Milanesas</TabsTrigger>
-            <TabsTrigger value="papas">Papas Fritas</TabsTrigger>
-            <TabsTrigger value="promos">Promos</TabsTrigger>
-          </TabsList>
+          <div className="mb-6">
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 h-auto">
+              <TabsTrigger value="hamburguesas" className="text-xs sm:text-sm py-2.5">
+                Hamburguesas
+              </TabsTrigger>
+              <TabsTrigger value="bebidas" className="text-xs sm:text-sm py-2.5">
+                Bebidas
+              </TabsTrigger>
+              <TabsTrigger value="milanesas" className="text-xs sm:text-sm py-2.5">
+                Milanesas
+              </TabsTrigger>
+              <TabsTrigger value="papas" className="text-xs sm:text-sm py-2.5">
+                Papas Fritas
+              </TabsTrigger>
+              <TabsTrigger value="promos" className="text-xs sm:text-sm py-2.5">
+                Promos
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
-          <TabsContent value="hamburguesas">
-            {renderCategoryItems("hamburguesas")}
-          </TabsContent>
+          <div className="space-y-6">
+            <TabsContent value="hamburguesas" className="mt-0">
+              {renderCategoryItems("hamburguesas")}
+            </TabsContent>
 
-          <TabsContent value="bebidas">
-            {renderCategoryItems("bebidas")}
-          </TabsContent>
+            <TabsContent value="bebidas" className="mt-0">
+              {renderCategoryItems("bebidas")}
+            </TabsContent>
 
-          <TabsContent value="milanesas">
-            {renderCategoryItems("milanesas")}
-          </TabsContent>
+            <TabsContent value="milanesas" className="mt-0">
+              {renderCategoryItems("milanesas")}
+            </TabsContent>
 
-          <TabsContent value="papas">
-            {renderCategoryItems("papas")}
-          </TabsContent>
+            <TabsContent value="papas" className="mt-0">
+              {renderCategoryItems("papas")}
+            </TabsContent>
 
-          <TabsContent value="promos">
-            {renderCategoryItems("promos")}
-          </TabsContent>
+            <TabsContent value="promos" className="mt-0">
+              {renderCategoryItems("promos")}
+            </TabsContent>
+          </div>
         </Tabs>
 
         <div className="sticky bottom-4 mt-8 flex justify-end">
