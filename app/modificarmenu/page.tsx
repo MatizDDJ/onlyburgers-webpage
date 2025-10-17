@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Lock, Save, Loader2, CheckCircle, XCircle, Shield, Plus, Trash2, Edit, ArrowLeft, Upload } from "lucide-react"
+import { Lock, Save, Loader2, CheckCircle, XCircle, Shield, Plus, Trash2, Edit, ArrowLeft, Upload, Check } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import {
   Select,
@@ -87,6 +87,10 @@ export default function ModificarMenuPage() {
   const [uploadingImage, setUploadingImage] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [uploadingItemId, setUploadingItemId] = useState<string | null>(null)
+  
+  // Estado para overlay de confirmación
+  const [showSuccessOverlay, setShowSuccessOverlay] = useState(false)
+  const [successMessage, setSuccessMessage] = useState("")
 
   useEffect(() => {
     // Verificar si hay token guardado en localStorage
@@ -312,6 +316,9 @@ export default function ModificarMenuPage() {
   }
   
   const handleAddProduct = async () => {
+    // Prevenir clicks múltiples
+    if (loading) return
+    
     if (!menuData || !newProduct.category || !newProduct.name || !newProduct.price) {
       setErrorMessage("Por favor completa todos los campos obligatorios")
       return
@@ -360,12 +367,14 @@ export default function ModificarMenuPage() {
         // Limpiar caché del menú
         localStorage.removeItem('onlyburgers_menu_cache')
         
-        // Mostrar mensaje de éxito
+        // Mostrar overlay de éxito
         setErrorMessage("")
-        setSaveStatus("success")
+        setSuccessMessage("¡Producto agregado al menú correctamente!")
+        setShowSuccessOverlay(true)
         
-        // Esperar 3 segundos antes de volver
+        // Esperar animación y volver
         setTimeout(() => {
+          setShowSuccessOverlay(false)
           setNewProduct({
             category: "",
             name: "",
@@ -377,7 +386,7 @@ export default function ModificarMenuPage() {
           })
           setSaveStatus("idle")
           setCurrentView("menu")
-        }, 3000)
+        }, 2500)
       } else {
         if (response.status === 401) {
           setErrorMessage("Sesión expirada. Por favor, inicia sesión nuevamente.")
@@ -458,7 +467,8 @@ export default function ModificarMenuPage() {
   }
 
   const handleSave = async () => {
-    if (!menuData || !authToken) return
+    // Prevenir clicks múltiples
+    if (!menuData || !authToken || loading) return
 
     setLoading(true)
     setSaveStatus("idle")
@@ -479,8 +489,14 @@ export default function ModificarMenuPage() {
         // Limpiar caché del menú para que se actualice en la página principal
         localStorage.removeItem('onlyburgers_menu_cache')
         
-        setSaveStatus("success")
-        setTimeout(() => setSaveStatus("idle"), 3000)
+        // Mostrar overlay de éxito
+        setSuccessMessage("¡Cambios guardados correctamente!")
+        setShowSuccessOverlay(true)
+        
+        setTimeout(() => {
+          setShowSuccessOverlay(false)
+          setSaveStatus("idle")
+        }, 2500)
       } else {
         if (response.status === 401) {
           // Token expirado, cerrar sesión
@@ -859,17 +875,43 @@ export default function ModificarMenuPage() {
                   variant="outline"
                   onClick={() => setCurrentView("menu")}
                   className="flex-1"
+                  disabled={loading}
                 >
                   Cancelar
                 </Button>
-                <Button onClick={handleAddProduct} className="flex-1">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Añadir Producto
+                <Button onClick={handleAddProduct} className="flex-1" disabled={loading}>
+                  {loading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Guardando...
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Añadir Producto
+                    </>
+                  )}
                 </Button>
               </div>
             </CardContent>
           </Card>
         </div>
+
+        {/* Overlay de éxito */}
+        {showSuccessOverlay && (
+          <div className="fixed inset-0 z-[10002] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+            <div className="flex flex-col items-center gap-4 animate-in zoom-in-95 duration-500">
+              <div className="bg-green-600 rounded-full p-6 shadow-2xl animate-in zoom-in-50 duration-700">
+                <Check className="h-20 w-20 md:h-24 md:w-24 text-white animate-in zoom-in-0 duration-500 delay-200" strokeWidth={3} />
+              </div>
+              <div className="bg-background/95 backdrop-blur-sm rounded-lg px-8 py-4 shadow-xl animate-in slide-in-from-bottom-4 duration-500 delay-300">
+                <p className="text-xl md:text-2xl font-bold text-center text-foreground">
+                  {successMessage}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     )
   }
@@ -1316,6 +1358,22 @@ export default function ModificarMenuPage() {
           </Button>
         </div>
       </div>
+
+      {/* Overlay de éxito */}
+      {showSuccessOverlay && (
+        <div className="fixed inset-0 z-[10002] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="flex flex-col items-center gap-4 animate-in zoom-in-95 duration-500">
+            <div className="bg-green-600 rounded-full p-6 shadow-2xl animate-in zoom-in-50 duration-700">
+              <Check className="h-20 w-20 md:h-24 md:w-24 text-white animate-in zoom-in-0 duration-500 delay-200" strokeWidth={3} />
+            </div>
+            <div className="bg-background/95 backdrop-blur-sm rounded-lg px-8 py-4 shadow-xl animate-in slide-in-from-bottom-4 duration-500 delay-300">
+              <p className="text-xl md:text-2xl font-bold text-center text-foreground">
+                {successMessage}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
