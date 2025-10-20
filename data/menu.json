@@ -173,7 +173,8 @@
       "price": 380,
       "image": "/breaded-beef-milanesa-with-fries.jpg",
       "popular": false,
-      "includesFries": true
+      "includesFries": true,
+      "allowMeatType": true
     },
     {
       "id": "milanesa-simple",
@@ -182,7 +183,8 @@
       "price": 380,
       "image": "/milanesa-napolitana-with-cheese-and-ham.jpg",
       "popular": false,
-      "includesFries": true
+      "includesFries": true,
+      "allowMeatType": true
     },
     {
       "id": "milanesa-new",
@@ -191,7 +193,8 @@
       "price": 380,
       "image": "/breaded-chicken-milanesa-with-fries.jpg",
       "popular": false,
-      "includesFries": true
+      "includesFries": true,
+      "allowMeatType": true
     },
     {
       "id": "milanesa-especialidad",
@@ -200,7 +203,8 @@
       "price": 420,
       "image": "/breaded-chicken-milanesa-with-fries.jpg",
       "popular": false,
-      "includesFries": true
+      "includesFries": true,
+      "allowMeatType": true
     }
   ],
   "papas": [
@@ -240,7 +244,9 @@
       "price": 400,
       "image": "/classic-cheeseburger-with-melted-cheese.jpg",
       "popular": true,
-      "includesFries": true
+      "includesFries": true,
+      "allowBurgerChoice": false,
+      "allowDrinkChoice": false
     },
     {
       "id": "combo-especial",
@@ -249,7 +255,9 @@
       "price": 480,
       "image": "/bbq-bacon-burger.jpg",
       "popular": true,
-      "includesFries": true
+      "includesFries": true,
+      "allowBurgerChoice": false,
+      "allowDrinkChoice": true
     },
     {
       "id": "combo-duo",
@@ -258,7 +266,9 @@
       "price": 750,
       "image": "/delicious-gourmet-burger-with-melted-cheese-and-fr.jpg",
       "popular": true,
-      "includesFries": true
+      "includesFries": true,
+      "allowBurgerChoice": false,
+      "allowDrinkChoice": false
     }
   ]
 }

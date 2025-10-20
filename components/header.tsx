@@ -30,14 +30,14 @@ export function Header() {
       }}
     >
       <div className="container mx-auto max-w-7xl flex h-16 items-center justify-between px-4 md:px-6">
-        <Link href="/" className="flex-1">
+        <Link href="/" className="flex-shrink-0">
           <div className="text-2xl font-bold text-primary tracking-tight font-[family-name:var(--font-display)]">
             ONLY BURGUERS
           </div>
         </Link>
 
         <nav className="hidden md:flex items-center justify-center flex-1">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
             <Link href="/menu" className="text-sm font-medium hover:text-primary transition-colors">
               Menú
             </Link>
@@ -50,7 +50,7 @@ export function Header() {
           </div>
         </nav>
 
-        <div className="flex items-center gap-4 flex-1 justify-end">
+        <div className="flex items-center gap-4 flex-shrink-0">
           <Link href="/order">
             <Button variant="ghost" size="icon" className="relative">
               <ShoppingCart className="h-5 w-5" />

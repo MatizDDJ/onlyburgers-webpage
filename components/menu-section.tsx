@@ -5,7 +5,12 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
-import { useCart } from "@/lib/cart-context"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@/components/ui/label"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useCart, type CartItemOptions } from "@/lib/cart-context"
+import { isOpen, getNextOpenTime } from "@/lib/business-hours"
 import { Plus, Check, X, Loader2 } from "lucide-react"
 import { useState, useEffect } from "react"
 
@@ -250,6 +255,16 @@ export function MenuSection() {
   const [addedItemId, setAddedItemId] = useState<string | null>(null)
   const [isAnimating, setIsAnimating] = useState(false)
   const [selectedItem, setSelectedItem] = useState<any | null>(null)
+  const [showOptionsModal, setShowOptionsModal] = useState(false)
+  const [showComments, setShowComments] = useState(false)
+  const [isPromo, setIsPromo] = useState(false)
+  const [itemOptions, setItemOptions] = useState<CartItemOptions>({
+    meatType: "carne",
+    mayo: true,
+    comments: "",
+    selectedBurger: "",
+    selectedDrink: "",
+  })
   const [menuData, setMenuData] = useState<typeof menuItems | null>(null)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<string>("hamburguesas")
@@ -261,6 +276,17 @@ export function MenuSection() {
       setActiveTab(savedTab)
     }
   }, [])
+
+  // Establecer valores por defecto cuando se abre el modal de promo
+  useEffect(() => {
+    if (showOptionsModal && isPromo && menuData) {
+      setItemOptions(prev => ({
+        ...prev,
+        selectedBurger: prev.selectedBurger || menuData.hamburguesas?.[0]?.id || "",
+        selectedDrink: prev.selectedDrink || menuData.bebidas?.[0]?.id || "",
+      }))
+    }
+  }, [showOptionsModal, isPromo, menuData])
 
   // Guardar tab activa en localStorage cuando cambie
   const handleTabChange = (value: string) => {
@@ -305,9 +331,84 @@ export function MenuSection() {
     loadMenu()
   }, [])
 
-  const handleAddToCart = (item: any) => {
+  const handleAddToCart = (item: any, skipOptions = false, forceAdd = false) => {
     // Prevenir clicks múltiples mientras hay animación en curso
     if (isAnimating) return
+    
+    // Determinar si el producto necesita opciones
+    const isMilanesa = activeTab === "milanesas"
+    const isHamburguesa = activeTab === "hamburguesas"
+    const isPromoItem = activeTab === "promos"
+    
+    // Verificar si realmente necesita modal de opciones
+    const milaneseNeedsOptions = isMilanesa && item.allowMeatType
+    const promoNeedsOptions = isPromoItem && (item.allowBurgerChoice || item.allowDrinkChoice)
+    const needsOptions = (milaneseNeedsOptions || isHamburguesa || promoNeedsOptions) && !skipOptions
+    
+    // Si necesita opciones y no las saltamos y no es una confirmación forzada, mostrar modal
+    if (needsOptions && !forceAdd) {
+      setSelectedItem(item)
+      setShowOptionsModal(true)
+      setIsPromo(isPromoItem)
+      // Resetear opciones a valores por defecto
+      setShowComments(false)
+      setItemOptions({
+        meatType: "carne",
+        mayo: true,
+        comments: "",
+        selectedBurger: menuData?.hamburguesas?.[0]?.id || "",
+        selectedDrink: menuData?.bebidas?.[0]?.id || "",
+      })
+      return
+    }
+    
+    // Crear ID único basado en las opciones
+    const optionsString = skipOptions 
+      ? ""
+      : `-${itemOptions.meatType || "default"}-${itemOptions.mayo ? "mayo" : "nomayo"}-${itemOptions.comments ? "comments" : "nocomments"}-${itemOptions.selectedBurger || ""}-${itemOptions.selectedDrink || ""}`
+    const customId = `${item.id}${optionsString}`
+    
+    // Obtener nombres de hamburguesa y bebida seleccionadas
+    const selectedBurgerName = itemOptions.selectedBurger 
+      ? menuData?.hamburguesas?.find((b: any) => b.id === itemOptions.selectedBurger)?.name 
+      : undefined
+    const selectedDrinkName = itemOptions.selectedDrink
+      ? menuData?.bebidas?.find((d: any) => d.id === itemOptions.selectedDrink)?.name
+      : undefined
+    
+    // Determinar si realmente necesita opciones
+    const milaneseNeedsOpts = isMilanesa && item.allowMeatType
+    const promoNeedsOpts = isPromoItem && (item.allowBurgerChoice || item.allowDrinkChoice)
+    const shouldIncludeOptions = !skipOptions && (milaneseNeedsOpts || isHamburguesa || promoNeedsOpts)
+    
+    // Preparar las opciones según el tipo de producto
+    let productOptions = {}
+    if (shouldIncludeOptions) {
+      if (isPromoItem) {
+        // Para promos, solo incluir hamburguesa, bebida y comentarios si están permitidos
+        productOptions = {
+          selectedBurger: item.allowBurgerChoice ? selectedBurgerName : undefined,
+          selectedDrink: item.allowDrinkChoice ? selectedDrinkName : undefined,
+          comments: itemOptions.comments || undefined,
+          customId,
+        }
+      } else if (isMilanesa && item.allowMeatType) {
+        // Para milanesas con opción de tipo: tipo de carne, mayonesa y comentarios
+        productOptions = {
+          meatType: itemOptions.meatType,
+          mayo: itemOptions.mayo,
+          comments: itemOptions.comments || undefined,
+          customId,
+        }
+      } else if (isHamburguesa) {
+        // Para hamburguesas: mayonesa y comentarios
+        productOptions = {
+          mayo: itemOptions.mayo,
+          comments: itemOptions.comments || undefined,
+          customId,
+        }
+      }
+    }
     
     addItem({
       id: item.id,
@@ -315,6 +416,7 @@ export function MenuSection() {
       price: item.price,
       image: item.image,
       quantity: 1,
+      options: shouldIncludeOptions ? productOptions : undefined,
     })
 
     setAddedItemId(item.id)
@@ -323,22 +425,81 @@ export function MenuSection() {
     setTimeout(() => {
       setAddedItemId(null)
       setIsAnimating(false)
-    }, 1500) // Duración total de la animación
+    }, 1500)
     
-    // Cerrar el modal si está abierto
+    // Cerrar modales
     setSelectedItem(null)
+    setShowOptionsModal(false)
+  }
+  
+  const confirmAddToCart = () => {
+    if (selectedItem) {
+      // Verificar si el restaurante está abierto
+      if (!isOpen()) {
+        const nextOpen = getNextOpenTime()
+        const message = nextOpen 
+          ? `😴 Lo sentimos, estamos cerrados. Volvemos ${nextOpen.day} a las ${nextOpen.time}`
+          : "😴 Lo sentimos, estamos cerrados temporalmente"
+        alert(message)
+        setShowOptionsModal(false)
+        return
+      }
+
+      const isBebidaOrPapa = activeTab === "bebidas" || activeTab === "papas"
+      
+      // Si es bebida o papas, agregar directamente sin opciones
+      if (isBebidaOrPapa) {
+        handleAddToCart(selectedItem, true, true)
+        setShowOptionsModal(false)
+        return
+      }
+      
+      // Si es una promo, validar que tenga hamburguesa y bebida seleccionadas
+      if (isPromo) {
+        const needsBurger = selectedItem.allowBurgerChoice
+        const needsDrink = selectedItem.allowDrinkChoice
+        
+        if (needsBurger && !itemOptions.selectedBurger) {
+          alert('Por favor selecciona una hamburguesa')
+          return
+        }
+        if (needsDrink && !itemOptions.selectedDrink) {
+          alert('Por favor selecciona una bebida')
+          return
+        }
+      }
+      
+      handleAddToCart(selectedItem, false, true)
+      setShowOptionsModal(false)
+    }
   }
 
   const renderMenuItems = (items: any[], showFreeFries = false) => (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {items?.map((item) => (
+      {items?.map((item) => {
+        // Determinar si este item necesita opciones
+        const itemNeedsOptions = activeTab === "hamburguesas" || activeTab === "milanesas" || activeTab === "promos"
+        
+        return (
         <Card
           key={item.id}
           className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border-2 flex flex-col h-full"
         >
           <div 
             className="relative aspect-[4/3] overflow-hidden bg-muted cursor-pointer group"
-            onClick={() => setSelectedItem(item)}
+            onClick={() => {
+              setSelectedItem(item)
+              setShowOptionsModal(true)
+              setShowComments(false)
+              setIsPromo(activeTab === "promos")
+              setItemOptions({ 
+                meatType: "carne", 
+                mayo: true, 
+                comments: "",
+                selectedBurger: menuData?.hamburguesas?.[0]?.id || "",
+                selectedDrink: menuData?.bebidas?.[0]?.id || "",
+              })
+            }}
           >
             <img
               src={item.image || "/placeholder.svg"}
@@ -378,13 +539,13 @@ export function MenuSection() {
 
           <CardFooter className="flex items-center justify-between mt-auto">
             <span className="text-2xl font-bold text-primary">$U {item.price}</span>
-            <Button onClick={() => handleAddToCart(item)} className="shadow-md">
+            <Button onClick={() => handleAddToCart(item, !itemNeedsOptions)} className="shadow-md">
               <Plus className="h-4 w-4 mr-1" />
               Agregar
             </Button>
           </CardFooter>
         </Card>
-      ))}
+      )})}
     </div>
   )
 
@@ -494,56 +655,187 @@ export function MenuSection() {
           </TabsContent>
         </Tabs>
 
-        {/* Modal de detalles del producto */}
-        <Dialog open={selectedItem !== null} onOpenChange={(open) => !open && setSelectedItem(null)}>
-          <DialogContent className="max-w-md md:max-w-2xl animate-in fade-in-0 zoom-in-95 duration-300 p-4 md:p-6">
+        {/* Modal de opciones del producto */}
+        <Dialog open={showOptionsModal} onOpenChange={(open) => !open && setShowOptionsModal(false)}>
+          <DialogContent className="max-w-md md:max-w-2xl max-h-[90vh] flex flex-col animate-in fade-in-0 zoom-in-95 duration-300 p-4 md:p-6">
             {selectedItem && (
-              <div className="flex flex-col gap-3 md:gap-4">
-                <DialogHeader className="space-y-1 md:space-y-2">
+              <div className="flex flex-col gap-3 md:gap-4 overflow-y-auto">
+                <DialogHeader className="space-y-1 md:space-y-2 flex-shrink-0">
                   <DialogTitle className="text-lg md:text-2xl font-bold font-[family-name:var(--font-display)]">
-                    {selectedItem.name}
+                    Personaliza tu pedido
                   </DialogTitle>
-                  <DialogDescription className="text-xs md:text-base line-clamp-2">
-                    {selectedItem.description}
+                  <DialogDescription className="text-xs md:text-base">
+                    {selectedItem.name} - $U {selectedItem.price}
                   </DialogDescription>
                 </DialogHeader>
 
-                <div className="relative w-full aspect-video overflow-hidden rounded-lg bg-muted">
+                <div className="relative w-full aspect-video overflow-hidden rounded-lg bg-muted flex-shrink-0">
                   <img
                     src={selectedItem.image || "/placeholder.svg"}
                     alt={selectedItem.name}
                     className="object-cover w-full h-full"
                   />
-                  <div className="absolute top-2 left-2 right-2 flex flex-wrap gap-1.5 z-10">
-                    {selectedItem.popular && (
-                      <Badge className="bg-primary text-primary-foreground shadow-lg text-[10px] md:text-xs px-2 py-0.5">
-                        Popular
-                      </Badge>
-                    )}
-                    {selectedItem.includesFries && (
-                      <Badge className="bg-green-600 text-white shadow-lg text-[10px] md:text-xs px-2 py-0.5">
-                        🍟 Incluye Papas Gratis
-                      </Badge>
-                    )}
-                  </div>
                 </div>
 
-                <div className="flex items-center justify-center py-1">
-                  <span className="text-2xl md:text-3xl font-bold text-primary">$U {selectedItem.price}</span>
+                <div className="space-y-4">
+                  {/* Opción de tipo de carne (solo para milanesas si allowMeatType está activado) */}
+                  {activeTab === "milanesas" && (selectedItem?.allowMeatType === true) && (
+                    <div className="space-y-3">
+                      <Label className="text-base font-semibold">Tipo de Milanesa *</Label>
+                      <RadioGroup
+                        value={itemOptions.meatType}
+                        onValueChange={(value: "carne" | "pollo") => 
+                          setItemOptions({ ...itemOptions, meatType: value })
+                        }
+                        className="space-y-3"
+                      >
+                        <div className="flex items-center space-x-3 border rounded-lg p-3 cursor-pointer hover:bg-accent transition-colors">
+                          <RadioGroupItem value="carne" id="carne" />
+                          <Label htmlFor="carne" className="flex-1 cursor-pointer text-sm md:text-base">
+                            Milanesa de Carne
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-3 border rounded-lg p-3 cursor-pointer hover:bg-accent transition-colors">
+                          <RadioGroupItem value="pollo" id="pollo" />
+                          <Label htmlFor="pollo" className="flex-1 cursor-pointer text-sm md:text-base">
+                            Milanesa de Pollo
+                          </Label>
+                        </div>
+                      </RadioGroup>
+                    </div>
+                  )}
+
+                  {/* Opción de mayonesa (para hamburguesas y milanesas) */}
+                  {(activeTab === "hamburguesas" || activeTab === "milanesas") && (
+                    <div className="space-y-3">
+                      <Label className="text-base font-semibold">Extras</Label>
+                      <div className="flex items-center space-x-3 border rounded-lg p-3">
+                        <Checkbox
+                          id="mayo"
+                          checked={itemOptions.mayo}
+                          onCheckedChange={(checked) => 
+                            setItemOptions({ ...itemOptions, mayo: checked as boolean })
+                          }
+                        />
+                        <Label htmlFor="mayo" className="flex-1 cursor-pointer text-sm md:text-base">
+                          Agregar mayonesa
+                        </Label>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Selección de hamburguesa y bebida para promos */}
+                  {isPromo && (
+                    <div className="space-y-4">
+                      {(selectedItem?.allowBurgerChoice === true) && (
+                        <div className="space-y-2">
+                          <Label className="text-base font-semibold">Elegí tu Hamburguesa *</Label>
+                          <Select
+                            value={itemOptions.selectedBurger}
+                            onValueChange={(value) => setItemOptions({ ...itemOptions, selectedBurger: value })}
+                          >
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Selecciona una hamburguesa" />
+                            </SelectTrigger>
+                            <SelectContent 
+                              className="z-[10002] max-h-[200px]" 
+                              position="popper"
+                              sideOffset={4}
+                              align="start"
+                            >
+                              {menuData?.hamburguesas?.map((burger: any) => (
+                                <SelectItem 
+                                  key={burger.id} 
+                                  value={burger.id}
+                                  className="cursor-pointer py-3 px-3 border-b border-gray-200 hover:bg-gray-100 focus:bg-gray-100 data-[state=checked]:bg-orange-100 data-[state=checked]:text-gray-900 data-[state=checked]:font-semibold"
+                                >
+                                  {burger.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      )}
+
+                      {(selectedItem?.allowDrinkChoice === true) && (
+                        <div className="space-y-2">
+                          <Label className="text-base font-semibold">Elegí tu Bebida *</Label>
+                          <Select
+                            value={itemOptions.selectedDrink}
+                            onValueChange={(value) => setItemOptions({ ...itemOptions, selectedDrink: value })}
+                          >
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Selecciona una bebida" />
+                            </SelectTrigger>
+                            <SelectContent 
+                              className="z-[10002] max-h-[200px]" 
+                              position="popper"
+                              sideOffset={4}
+                              align="start"
+                            >
+                              {menuData?.bebidas?.map((drink: any) => (
+                                <SelectItem 
+                                  key={drink.id} 
+                                  value={drink.id}
+                                  className="cursor-pointer py-3 px-3 border-b border-gray-200 hover:bg-gray-100 focus:bg-gray-100 data-[state=checked]:bg-orange-100 data-[state=checked]:text-gray-900 data-[state=checked]:font-semibold"
+                                >
+                                  {drink.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Opción de comentarios especiales */}
+                  {(activeTab === "hamburguesas" || activeTab === "milanesas") && (
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-3 border rounded-lg p-3 cursor-pointer hover:bg-accent transition-colors"
+                        onClick={() => setShowComments(!showComments)}
+                      >
+                        <Checkbox
+                          id="comments"
+                          checked={showComments}
+                          onCheckedChange={(checked) => setShowComments(checked as boolean)}
+                          className="transition-transform duration-300 data-[state=checked]:scale-110"
+                        />
+                        <Label htmlFor="comments" className="flex-1 cursor-pointer text-sm md:text-base">
+                          Agregar comentarios especiales
+                        </Label>
+                      </div>
+                      
+                      {/* Campo de comentarios con animación */}
+                      <div 
+                        className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                          showComments ? 'max-h-32 opacity-100' : 'max-h-0 opacity-0'
+                        }`}
+                      >
+                        <textarea
+                          value={itemOptions.comments || ""}
+                          onChange={(e) => setItemOptions({ ...itemOptions, comments: e.target.value })}
+                          placeholder="Ej: Sin cebolla, extra queso, sin tomate..."
+                          className="w-full min-h-[80px] p-3 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary text-sm md:text-base"
+                          disabled={!showComments}
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                <DialogFooter className="flex flex-col sm:flex-row gap-2">
+                <DialogFooter className="flex flex-col sm:flex-row gap-2 mt-2">
                   <Button
                     variant="outline"
-                    onClick={() => setSelectedItem(null)}
-                    className="flex-1 text-sm md:text-base py-3 md:py-4"
+                    onClick={() => setShowOptionsModal(false)}
+                    className="flex-1 text-sm md:text-base py-2 md:py-3"
                   >
                     <X className="h-4 w-4 mr-2" />
                     Cancelar
                   </Button>
                   <Button
-                    onClick={() => handleAddToCart(selectedItem)}
-                    className="flex-1 text-sm md:text-base py-3 md:py-4 shadow-md"
+                    onClick={confirmAddToCart}
+                    className="flex-1 text-sm md:text-base py-2 md:py-3 shadow-md"
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Agregar al Carrito

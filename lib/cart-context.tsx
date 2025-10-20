@@ -2,12 +2,23 @@
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
 
+export interface CartItemOptions {
+  meatType?: "carne" | "pollo" // Para milanesas
+  mayo?: boolean // Si lleva mayonesa
+  comments?: string // Comentarios especiales del cliente
+  customId?: string // ID único para items con diferentes opciones
+  // Para promos
+  selectedBurger?: string // ID de la hamburguesa elegida
+  selectedDrink?: string // ID de la bebida elegida
+}
+
 export interface CartItem {
   id: string
   name: string
   price: number
   image: string
   quantity: number
+  options?: CartItemOptions
 }
 
 interface CartContextType {
@@ -54,16 +65,31 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addItem = (newItem: CartItem) => {
     setItems((currentItems) => {
-      const existingItem = currentItems.find((item) => item.id === newItem.id)
+      // Crear un ID único basado en el producto y sus opciones
+      const itemCustomId = newItem.options?.customId || newItem.id
+      
+      const existingItem = currentItems.find((item) => {
+        const existingCustomId = item.options?.customId || item.id
+        return existingCustomId === itemCustomId
+      })
+      
       if (existingItem) {
-        return currentItems.map((item) => (item.id === newItem.id ? { ...item, quantity: item.quantity + 1 } : item))
+        return currentItems.map((item) => {
+          const existingCustomId = item.options?.customId || item.id
+          return existingCustomId === itemCustomId
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        })
       }
       return [...currentItems, { ...newItem, quantity: 1 }]
     })
   }
 
   const removeItem = (id: string) => {
-    setItems((currentItems) => currentItems.filter((item) => item.id !== id))
+    setItems((currentItems) => currentItems.filter((item) => {
+      const itemId = item.options?.customId || item.id
+      return itemId !== id
+    }))
   }
 
   const updateQuantity = (id: string, quantity: number) => {
@@ -71,7 +97,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
       removeItem(id)
       return
     }
-    setItems((currentItems) => currentItems.map((item) => (item.id === id ? { ...item, quantity } : item)))
+    setItems((currentItems) => currentItems.map((item) => {
+      const itemId = item.options?.customId || item.id
+      return itemId === id ? { ...item, quantity } : item
+    }))
   }
 
   const clearCart = () => {

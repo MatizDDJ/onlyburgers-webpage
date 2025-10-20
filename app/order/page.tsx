@@ -12,8 +12,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft, MessageCircle, CreditCard, Banknote } from "lucide-react"
 import Link from "next/link"
 import { useState, useEffect } from "react"
-import { BusinessHoursBanner } from "@/components/business-hours-banner"
-import { isOpen } from "@/lib/business-hours"
+import { isOpen, getNextOpenTime } from "@/lib/business-hours"
 
 export default function OrderPage() {
   const { items, updateQuantity, removeItem, total } = useCart()
@@ -48,6 +47,26 @@ export default function OrderPage() {
     message += `🛒 *PRODUCTOS*\n`
     items.forEach((item, index) => {
       message += `${index + 1}. *${item.name}*\n`
+      
+      // Agregar opciones si existen
+      if (item.options) {
+        if (item.options.meatType) {
+          message += `   - ${item.options.meatType === "carne" ? "Carne" : "Pollo"}\n`
+        }
+        if (item.options.mayo !== undefined) {
+          message += `   - ${item.options.mayo ? "Con mayonesa" : "Sin mayonesa"}\n`
+        }
+        if (item.options.selectedBurger) {
+          message += `   - Hamburguesa: ${item.options.selectedBurger}\n`
+        }
+        if (item.options.selectedDrink) {
+          message += `   - Bebida: ${item.options.selectedDrink}\n`
+        }
+        if (item.options.comments) {
+          message += `   - Nota: ${item.options.comments}\n`
+        }
+      }
+      
       message += `   Cantidad: ${item.quantity}\n`
       message += `   Precio: $U ${(item.price * item.quantity).toFixed(2)}\n\n`
     })
@@ -106,8 +125,6 @@ export default function OrderPage() {
       <Header />
       <div className="flex-1 py-8 md:py-12 bg-secondary/20 pt-24">
         <div className="container px-4">
-          <BusinessHoursBanner />
-          
           <div className="mb-6">
             <Link
               href="/#menu"
@@ -132,7 +149,7 @@ export default function OrderPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {items.map((item) => (
-                    <div key={item.id} className="flex gap-3 md:gap-4 pb-4 border-b last:border-0 last:pb-0">
+                    <div key={item.options?.customId || item.id} className="flex gap-3 md:gap-4 pb-4 border-b last:border-0 last:pb-0">
                       <div className="w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden bg-muted flex-shrink-0">
                         <img
                           src={item.image || "/placeholder.svg"}
@@ -142,13 +159,43 @@ export default function OrderPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="font-semibold text-base md:text-lg line-clamp-2">{item.name}</h3>
+                        {/* Mostrar opciones seleccionadas */}
+                        {item.options && (
+                          <div className="mt-1 space-y-0.5">
+                            {item.options.meatType && (
+                              <p className="text-xs md:text-sm text-muted-foreground">
+                                {item.options.meatType === "carne" ? "Carne" : "Pollo"}
+                              </p>
+                            )}
+                            {item.options.mayo !== undefined && (
+                              <p className="text-xs md:text-sm text-muted-foreground">
+                                {item.options.mayo ? "Con mayonesa" : "Sin mayonesa"}
+                              </p>
+                            )}
+                            {item.options.selectedBurger && (
+                              <p className="text-xs md:text-sm text-muted-foreground font-medium">
+                                🍔 {item.options.selectedBurger}
+                              </p>
+                            )}
+                            {item.options.selectedDrink && (
+                              <p className="text-xs md:text-sm text-muted-foreground font-medium">
+                                🥤 {item.options.selectedDrink}
+                              </p>
+                            )}
+                            {item.options.comments && (
+                              <p className="text-xs md:text-sm text-muted-foreground italic">
+                                Nota: {item.options.comments}
+                              </p>
+                            )}
+                          </div>
+                        )}
                         <p className="text-primary font-bold mt-1">$U {item.price.toFixed(2)}</p>
                         <div className="flex items-center gap-2 mt-2 md:mt-3">
                           <Button
                             variant="outline"
                             size="icon"
                             className="h-8 w-8 bg-transparent"
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            onClick={() => updateQuantity(item.options?.customId || item.id, item.quantity - 1)}
                           >
                             <Minus className="h-3 w-3" />
                           </Button>
@@ -157,7 +204,7 @@ export default function OrderPage() {
                             variant="outline"
                             size="icon"
                             className="h-8 w-8 bg-transparent"
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            onClick={() => updateQuantity(item.options?.customId || item.id, item.quantity + 1)}
                           >
                             <Plus className="h-3 w-3" />
                           </Button>
@@ -165,7 +212,7 @@ export default function OrderPage() {
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8 ml-auto text-destructive hover:text-destructive"
-                            onClick={() => removeItem(item.id)}
+                            onClick={() => removeItem(item.options?.customId || item.id)}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -302,7 +349,10 @@ export default function OrderPage() {
                 <CardFooter className="flex-col gap-3">
                   {!storeOpen && (
                     <p className="text-sm text-orange-600 font-medium text-center">
-                       No se pueden hacer pedidos cuando estamos cerrados
+                       😴 Lo sentimos, estamos cerrados. {(() => {
+                         const nextOpen = getNextOpenTime();
+                         return nextOpen ? `Volvemos ${nextOpen.day} a las ${nextOpen.time}` : 'Volvemos pronto';
+                       })()}
                     </p>
                   )}
                   {!isFormValid && storeOpen && (

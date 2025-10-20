@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Usuario - ONLY BURGUERS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.1);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #dc2626;
+        }
+        
+        h1 {
+            color: #dc2626;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        h2 {
+            color: #dc2626;
+            font-size: 1.8em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #fee2e2;
+        }
+        
+        h3 {
+            color: #991b1b;
+            font-size: 1.3em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        .feature-box {
+            background: #fef2f2;
+            border-left: 4px solid #dc2626;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .warning-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .info-box {
+            background: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .success-box {
+            background: #dcfce7;
+            border-left: 4px solid #22c55e;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        ol, ul {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+        }
+        
+        code {
+            background: #f3f4f6;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #dc2626;
+            font-weight: 600;
+        }
+        
+        .url {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .url:hover {
+            text-decoration: underline;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        th {
+            background: #fee2e2;
+            color: #991b1b;
+            font-weight: 700;
+        }
+        
+        tr:hover {
+            background: #fef2f2;
+        }
+        
+        .step {
+            background: #f9fafb;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 3px solid #6b7280;
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: #dc2626;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        footer {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e5e7eb;
+            text-align: center;
+            color: #6b7280;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📖 MANUAL DE USUARIO</h1>
+            <p class="subtitle">Sistema de Gestión ONLY BURGUERS</p>
+            <p style="color: #999; font-size: 0.9em; margin-top: 10px;">Última actualización: 20 de Octubre, 2025</p>
+        </header>
+
+        <section>
+            <h2>🎯 Introducción</h2>
+            <p>Bienvenido al sistema de gestión de ONLY BURGUERS. Este manual te guiará paso a paso en el uso de todas las funcionalidades del panel de administración de tu página web.</p>
+            
+            <div class="info-box">
+                <strong>📌 Importante:</strong> Guarda este manual en un lugar seguro. Contiene información valiosa para administrar tu negocio online.
+            </div>
+        </section>
+
+        <section>
+            <h2>🔐 Acceso al Panel de Administración</h2>
+            
+            <h3>URL de Acceso</h3>
+            <p>Para acceder al panel administrativo, podés ingresar por cualquiera de estas dos rutas:</p>
+            <div class="feature-box">
+                <strong>Opción 1:</strong> <a href="https://onlyburguers.vercel.app/admin" class="url">https://onlyburguers.vercel.app/admin</a><br>
+                <strong>Opción 2:</strong> <a href="https://onlyburguers.vercel.app/modificarmenu" class="url">https://onlyburguers.vercel.app/modificarmenu</a>
+            </div>
+            
+            <h3>Inicio de Sesión</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                Ingresa tu contraseña de administrador en el campo de texto
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                Haz clic en el botón <strong>"Iniciar Sesión"</strong>
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                Si la contraseña es correcta, accederás al panel principal
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Seguridad:</strong> Nunca compartas tu contraseña de administrador. Si crees que alguien la conoce, contacta al desarrollador para cambiarla.
+            </div>
+        </section>
+
+        <section>
+            <h2>🍔 Gestión del Menú</h2>
+            <p>El panel principal muestra 4 opciones para gestionar tu restaurante:</p>
+
+            <h3>1️⃣ Añadir al Menú</h3>
+            <p>Permite agregar nuevos productos (hamburguesas, bebidas, milanesas, papas o promos).</p>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                Haz clic en la card <strong>"Añadir al Menú"</strong> (verde)
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                Completa el formulario:
+                <ul style="margin-top: 10px; margin-left: 20px;">
+                    <li><strong>Categoría:</strong> Selecciona donde aparecerá el producto (Hamburguesas, Bebidas, Milanesas, Papas Fritas, Promos)</li>
+                    <li><strong>Nombre del Producto:</strong> Ej: "Triple Bacon Burger"</li>
+                    <li><strong>Descripción:</strong> Describe los ingredientes y características</li>
+                    <li><strong>Precio:</strong> Solo números, sin símbolos. Ej: 450</li>
+                    <li><strong>Imagen:</strong> Puedes subir una foto o dejarlo vacío (se usará placeholder)</li>
+                    <li><strong>Producto Popular:</strong> Marca esta casilla si quieres destacarlo con una estrella ⭐</li>
+                    <li><strong>Incluye Papas Fritas:</strong> Marca si el producto viene con papas incluidas</li>
+                </ul>
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                Haz clic en <strong>"Añadir Producto"</strong>
+            </div>
+            <div class="step">
+                <span class="step-number">4</span>
+                Espera la confirmación ✅ (aparecerá un mensaje verde de éxito por 3 segundos)
+            </div>
+
+            <h3>📸 Subir Imágenes</h3>
+            <div class="feature-box">
+                <strong>Características de las imágenes:</strong>
+                <ul style="margin-top: 10px; margin-left: 20px;">
+                    <li>Formato permitido: JPG, PNG, WEBP</li>
+                    <li>Tamaño máximo: 5 MB</li>
+                    <li>Recomendación: Usa fotos cuadradas (1:1) para mejor visualización</li>
+                    <li>Las imágenes se suben a Cloudinary automáticamente</li>
+                </ul>
+            </div>
+
+            <h3>2️⃣ Eliminar del Menú</h3>
+            <p>Para quitar productos que ya no ofreces:</p>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                Haz clic en la card <strong>"Eliminar del Menú"</strong> (roja)
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                Selecciona la <strong>categoría</strong> del producto a eliminar
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                Haz clic en el botón rojo <strong>"Eliminar"</strong> del producto deseado
+            </div>
+            <div class="step">
+                <span class="step-number">4</span>
+                Confirma la eliminación en el cuadro de diálogo
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Atención:</strong> La eliminación es permanente y no se puede deshacer. Asegúrate de eliminar el producto correcto.
+            </div>
+
+            <h3>3️⃣ Modificar Precios</h3>
+            <p>Actualiza los precios de tus productos sin cambiar otros datos:</p>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                Haz clic en la card <strong>"Modificar Precios"</strong> (azul)
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                Navega por las pestañas de categorías (Hamburguesas, Bebidas, etc.)
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                Edita el precio directamente en el campo de texto
+            </div>
+            <div class="step">
+                <span class="step-number">4</span>
+                Opcionalmente, puedes:
+                <ul style="margin-top: 10px; margin-left: 20px;">
+                    <li>Cambiar el nombre del producto</li>
+                    <li>Actualizar la descripción</li>
+                    <li>Cambiar la imagen</li>
+                    <li>Marcar/desmarcar como "Popular"</li>
+                    <li>Marcar/desmarcar "Incluye Papas"</li>
+                </ul>
+            </div>
+            <div class="step">
+                <span class="step-number">5</span>
+                Haz clic en <strong>"Guardar Cambios"</strong> al final de la página
+            </div>
+
+            <div class="success-box">
+                <strong>💡 Consejo:</strong> Usa esta opción para actualizar precios rápidamente ante cambios de costos o promociones.
+            </div>
+        </section>
+
+        <section>
+            <h2>🕐 Gestión de Horarios</h2>
+            <p>Controla automáticamente cuándo los clientes pueden hacer pedidos:</p>
+
+            <h3>4️⃣ Configurar Horarios</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                Haz clic en la card <strong>"Horarios"</strong> (morada)
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                Para cada día de la semana, puedes:
+                <ul style="margin-top: 10px; margin-left: 20px;">
+                    <li><strong>Marcar/desmarcar el checkbox:</strong> Habilitar o cerrar ese día</li>
+                    <li><strong>Hora de apertura:</strong> Selecciona cuando abres (Ej: 11:00)</li>
+                    <li><strong>Hora de cierre:</strong> Selecciona cuando cierras (Ej: 23:00)</li>
+                </ul>
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                Haz clic en <strong>"Guardar Horarios"</strong>
+            </div>
+
+            <h3>🎨 Efectos de los Horarios</h3>
+            <p>Una vez configurados, los horarios afectan automáticamente:</p>
+            <div class="feature-box">
+                <strong>En la página principal:</strong>
+                <ul style="margin-top: 10px; margin-left: 20px;">
+                    <li>Badge "Entregas Disponibles" 🟢 cuando está abierto</li>
+                    <li>Badge "Estamos Cerrados" 🔴 cuando está cerrado</li>
+                </ul>
+            </div>
+            <div class="feature-box">
+                <strong>En la sección de contacto:</strong>
+                <ul style="margin-top: 10px; margin-left: 20px;">
+                    <li>Muestra el horario configurado automáticamente</li>
+                    <li>Indicador "Abierto ahora" o "Cerrado ahora"</li>
+                </ul>
+            </div>
+            <div class="feature-box">
+                <strong>En el menú y pedidos:</strong>
+                <ul style="margin-top: 10px; margin-left: 20px;">
+                    <li>Banner verde: "¡Estamos abiertos! Hacé tu pedido ahora" 🍔</li>
+                    <li>Banner naranja: "Estamos cerrados. Volvemos [día] a las [hora]" con countdown ⏰</li>
+                    <li>Botón de pedidos deshabilitado cuando está cerrado</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <strong>💡 Ejemplo de horario:</strong><br>
+                Lunes a Jueves: 11:00 - 23:00<br>
+                Viernes y Sábado: 11:00 - 00:00 (medianoche)<br>
+                Domingo: Cerrado (desmarca el checkbox)
+            </div>
+        </section>
+
+        <section>
+            <h2>📱 Gestión de Pedidos</h2>
+            
+            <h3>Cómo llegan los pedidos</h3>
+            <p>Cuando un cliente hace un pedido desde tu página web:</p>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                El cliente agrega productos al carrito desde el menú
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                Completa sus datos: nombre, teléfono y dirección de entrega
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                Selecciona método de pago: Efectivo o Transferencia
+            </div>
+            <div class="step">
+                <span class="step-number">4</span>
+                Hace clic en "Enviar Pedido por WhatsApp"
+            </div>
+            <div class="step">
+                <span class="step-number">5</span>
+                <strong>Te llega un mensaje a WhatsApp</strong> con:
+                <ul style="margin-top: 10px; margin-left: 20px;">
+                    <li>Datos del cliente</li>
+                    <li>Lista de productos y cantidades</li>
+                    <li>Total a pagar</li>
+                    <li>Método de pago elegido</li>
+                </ul>
+            </div>
+
+            <div class="success-box">
+                <strong>✅ Ventaja:</strong> Todos los pedidos llegan directamente a tu WhatsApp <strong>+598 92 469 883</strong> para confirmarlos personalmente.
+            </div>
+
+            <h3>Métodos de Pago</h3>
+            <table>
+                <tr>
+                    <th>Método</th>
+                    <th>Descripción</th>
+                    <th>Acción</th>
+                </tr>
+                <tr>
+                    <td>💵 Efectivo</td>
+                    <td>El cliente paga al recibir el pedido</td>
+                    <td>Confirmar pedido y enviar dirección</td>
+                </tr>
+                <tr>
+                    <td>💳 Transferencia</td>
+                    <td>El cliente transfiere antes de la entrega</td>
+                    <td>Esperar comprobante, verificar y confirmar</td>
+                </tr>
+            </table>
+
+            <div class="info-box">
+                <strong>📌 Datos para transferencia (mostrados al cliente):</strong><br>
+                <strong>Banco:</strong> Banco República (BROU)<br>
+                <strong>Cuenta:</strong> 001234567-00001<br>
+                <strong>Titular:</strong> ONLY BURGERS S.A.
+            </div>
+        </section>
+
+        <section>
+            <h2>🎨 Características Especiales</h2>
+
+            <h3>Productos Populares ⭐</h3>
+            <p>Los productos marcados como "populares" aparecen con una estrella dorada y se destacan visualmente en el menú para atraer más ventas.</p>
+
+            <h3>Carrito de Compras 🛒</h3>
+            <p>El carrito muestra:</p>
+            <ul>
+                <li>Número de productos en el ícono del header</li>
+                <li>Total acumulado</li>
+                <li>Envío GRATIS en todos los pedidos</li>
+            </ul>
+
+            <h3>Diseño Responsive 📱</h3>
+            <p>La página se adapta automáticamente a:</p>
+            <ul>
+                <li>Teléfonos móviles (celulares)</li>
+                <li>Tablets (iPads, etc.)</li>
+                <li>Computadoras de escritorio</li>
+            </ul>
+
+            <h3>Modo Oscuro 🌙</h3>
+            <p>La página detecta automáticamente si el usuario prefiere modo claro u oscuro en su dispositivo.</p>
+        </section>
+
+        <section>
+            <h2>🔧 Solución de Problemas</h2>
+
+            <h3>❌ No puedo iniciar sesión</h3>
+            <div class="warning-box">
+                <strong>Solución:</strong> Verifica que estés usando la contraseña correcta. Si la olvidaste, contacta al desarrollador.
+            </div>
+
+            <h3>❌ La imagen no se sube</h3>
+            <div class="warning-box">
+                <strong>Posibles causas:</strong>
+                <ul style="margin-top: 10px; margin-left: 20px;">
+                    <li>La imagen es muy grande (máximo 5 MB)</li>
+                    <li>Formato no soportado (usa JPG, PNG o WEBP)</li>
+                    <li>Problema de conexión a internet</li>
+                </ul>
+            </div>
+
+            <h3>❌ Los cambios no se reflejan en la página</h3>
+            <div class="warning-box">
+                <strong>Solución:</strong> 
+                <ol style="margin-top: 10px; margin-left: 20px;">
+                    <li>Refresca la página (F5 o Ctrl+R)</li>
+                    <li>Limpia el caché del navegador (Ctrl+Shift+Delete)</li>
+                    <li>Abre en modo incógnito para verificar</li>
+                </ol>
+            </div>
+
+            <h3>❌ Error al guardar cambios</h3>
+            <div class="warning-box">
+                <strong>Solución:</strong> Verifica tu conexión a internet y vuelve a intentar. Si el problema persiste, cierra sesión y vuelve a entrar.
+            </div>
+        </section>
+
+        <section>
+            <h2>📊 Estadísticas y Análisis</h2>
+            <p>Para ver cuántas personas visitan tu página, puedes usar:</p>
+            <ul>
+                <li><strong>Google Analytics:</strong> Estadísticas detalladas de visitas</li>
+                <li><strong>Vercel Analytics:</strong> Métricas de rendimiento (si está activado)</li>
+                <li><strong>WhatsApp:</strong> Cuenta cuántos pedidos recibes diariamente</li>
+            </ul>
+
+            <div class="info-box">
+                <strong>💡 Consejo:</strong> Lleva un registro manual de pedidos para saber qué productos son más populares y ajustar tu menú.
+            </div>
+        </section>
+
+        <section>
+            <h2>🚀 Mejores Prácticas</h2>
+
+            <h3>✅ Mantén el menú actualizado</h3>
+            <ul>
+                <li>Elimina productos que ya no ofreces</li>
+                <li>Actualiza precios regularmente</li>
+                <li>Agrega nuevos productos en temporadas especiales</li>
+            </ul>
+
+            <h3>✅ Usa buenas fotos</h3>
+            <ul>
+                <li>Toma fotos con buena iluminación</li>
+                <li>Muestra el producto completo</li>
+                <li>Usa fondo neutro o simple</li>
+                <li>Comprime las imágenes antes de subirlas (puedes usar TinyPNG.com)</li>
+            </ul>
+
+            <h3>✅ Configura horarios realistas</h3>
+            <ul>
+                <li>Establece horarios que puedas cumplir consistentemente</li>
+                <li>Actualiza si cambias temporalmente (feriados, eventos, etc.)</li>
+                <li>Considera tiempo de preparación en horarios de cierre</li>
+            </ul>
+
+            <h3>✅ Responde rápido en WhatsApp</h3>
+            <ul>
+                <li>Confirma pedidos en menos de 5 minutos</li>
+                <li>Ten mensajes predefinidos para agilizar respuestas</li>
+                <li>Informa tiempo estimado de entrega</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>📞 Soporte Técnico</h2>
+            
+            <div class="feature-box">
+                <p><strong>Si tienes problemas técnicos o necesitas ayuda:</strong></p>
+                <ul style="margin-top: 10px;">
+                    <li>📧 Contacta al desarrollador</li>
+                    <li>🌐 Página web: <a href="https://onlyburguers.vercel.app" class="url">https://onlyburguers.vercel.app</a></li>
+                    <li>📱 WhatsApp de pedidos: +598 92 469 883</li>
+                </ul>
+            </div>
+
+            <h3>Información del Sistema</h3>
+            <table>
+                <tr>
+                    <th>Componente</th>
+                    <th>Detalles</th>
+                </tr>
+                <tr>
+                    <td>Hosting</td>
+                    <td>Vercel (Despliegue automático)</td>
+                </tr>
+                <tr>
+                    <td>Base de Datos</td>
+                    <td>Upstash Redis (256 MB)</td>
+                </tr>
+                <tr>
+                    <td>Imágenes</td>
+                    <td>Cloudinary (25 GB gratis)</td>
+                </tr>
+                <tr>
+                    <td>Framework</td>
+                    <td>Next.js 15 + React 18</td>
+                </tr>
+            </table>
+        </section>
+
+        <section>
+            <h2>📝 Resumen Rápido</h2>
+            
+            <div class="success-box">
+                <strong>🎯 Pasos para empezar:</strong>
+                <ol style="margin-top: 10px; margin-left: 20px;">
+                    <li>Ingresa a <code>/admin</code> o <code>/modificarmenu</code></li>
+                    <li>Inicia sesión con tu contraseña</li>
+                    <li>Configura tus horarios de apertura</li>
+                    <li>Agrega tus productos con fotos y precios</li>
+                    <li>¡Listo! Los clientes ya pueden hacer pedidos 🍔</li>
+                </ol>
+            </div>
+
+            <div class="info-box">
+                <strong>🔄 Tareas semanales recomendadas:</strong>
+                <ul style="margin-top: 10px; margin-left: 20px;">
+                    <li>Revisar y actualizar precios si es necesario</li>
+                    <li>Verificar que los horarios sean correctos</li>
+                    <li>Agregar productos nuevos o promociones</li>
+                    <li>Actualizar fotos de productos si mejoras la presentación</li>
+                </ul>
+            </div>
+        </section>
+
+        <footer>
+            <p><strong>ONLY BURGUERS</strong> - Sistema de Gestión Web</p>
+            <p style="margin-top: 10px;">Manual de Usuario v1.0 - Octubre 2025</p>
+            <p style="margin-top: 5px; font-size: 0.9em;">Desarrollado con ❤️ para la mejor hamburguesería</p>
+        </footer>
+    </div>
+
+    <script>
+        // Imprimir automáticamente si se agrega ?print en la URL
+        if (window.location.search.includes('print')) {
+            window.print();
+        }
+    </script>
+</body>
+</html>

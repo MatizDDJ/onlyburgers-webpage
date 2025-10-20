@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Lock, Save, Loader2, CheckCircle, XCircle } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
+import { Checkbox } from "@/components/ui/checkbox"
 
 interface MenuItem {
   id: string
@@ -18,6 +19,10 @@ interface MenuItem {
   image: string
   popular: boolean
   includesFries: boolean
+  // Nuevas propiedades para configuración
+  allowBurgerChoice?: boolean  // Para promos: permite elegir hamburguesa
+  allowDrinkChoice?: boolean   // Para promos: permite elegir bebida
+  allowMeatType?: boolean      // Para milanesas: permite elegir tipo de carne
 }
 
 interface MenuData {
@@ -76,6 +81,22 @@ export default function AdminPage() {
       ...menuData,
       [category]: menuData[category].map((item) =>
         item.id === itemId ? { ...item, price } : item
+      ),
+    })
+  }
+
+  const handleOptionToggle = (
+    category: keyof MenuData, 
+    itemId: string, 
+    option: 'allowBurgerChoice' | 'allowDrinkChoice' | 'allowMeatType',
+    value: boolean
+  ) => {
+    if (!menuData) return
+
+    setMenuData({
+      ...menuData,
+      [category]: menuData[category].map((item) =>
+        item.id === itemId ? { ...item, [option]: value } : item
       ),
     })
   }
@@ -203,23 +224,75 @@ export default function AdminPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center gap-4">
-              <div className="flex-1">
-                <Label htmlFor={`price-${item.id}`} className="text-sm">
-                  Precio ($U)
-                </Label>
-                <Input
-                  id={`price-${item.id}`}
-                  type="number"
-                  value={item.price}
-                  onChange={(e) =>
-                    handlePriceChange(category, item.id, e.target.value)
-                  }
-                  className="mt-1"
-                  step="1"
-                  min="0"
-                />
+            <div className="space-y-4">
+              <div className="flex items-center gap-4">
+                <div className="flex-1">
+                  <Label htmlFor={`price-${item.id}`} className="text-sm">
+                    Precio ($U)
+                  </Label>
+                  <Input
+                    id={`price-${item.id}`}
+                    type="number"
+                    value={item.price}
+                    onChange={(e) =>
+                      handlePriceChange(category, item.id, e.target.value)
+                    }
+                    className="mt-1"
+                    step="1"
+                    min="0"
+                  />
+                </div>
               </div>
+
+              {/* Opciones específicas para Promos */}
+              {category === "promos" && (
+                <div className="space-y-3 pt-2 border-t">
+                  <Label className="text-sm font-semibold">Opciones de Personalización</Label>
+                  <div className="flex items-center space-x-3">
+                    <Checkbox
+                      id={`burger-${item.id}`}
+                      checked={item.allowBurgerChoice || false}
+                      onCheckedChange={(checked) =>
+                        handleOptionToggle(category, item.id, 'allowBurgerChoice', checked as boolean)
+                      }
+                    />
+                    <Label htmlFor={`burger-${item.id}`} className="text-sm cursor-pointer">
+                      Permitir elegir hamburguesa
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Checkbox
+                      id={`drink-${item.id}`}
+                      checked={item.allowDrinkChoice || false}
+                      onCheckedChange={(checked) =>
+                        handleOptionToggle(category, item.id, 'allowDrinkChoice', checked as boolean)
+                      }
+                    />
+                    <Label htmlFor={`drink-${item.id}`} className="text-sm cursor-pointer">
+                      Permitir elegir bebida
+                    </Label>
+                  </div>
+                </div>
+              )}
+
+              {/* Opciones específicas para Milanesas */}
+              {category === "milanesas" && (
+                <div className="space-y-3 pt-2 border-t">
+                  <Label className="text-sm font-semibold">Opciones de Personalización</Label>
+                  <div className="flex items-center space-x-3">
+                    <Checkbox
+                      id={`meat-${item.id}`}
+                      checked={item.allowMeatType || false}
+                      onCheckedChange={(checked) =>
+                        handleOptionToggle(category, item.id, 'allowMeatType', checked as boolean)
+                      }
+                    />
+                    <Label htmlFor={`meat-${item.id}`} className="text-sm cursor-pointer">
+                      Permitir elegir tipo de carne (Carne/Pollo)
+                    </Label>
+                  </div>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>

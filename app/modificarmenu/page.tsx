@@ -37,6 +37,9 @@ interface MenuItem {
   image: string
   popular: boolean
   includesFries: boolean
+  allowBurgerChoice?: boolean
+  allowDrinkChoice?: boolean
+  allowMeatType?: boolean
 }
 
 interface MenuData {
@@ -68,6 +71,9 @@ export default function ModificarMenuPage() {
     image: string
     popular: boolean
     includesFries: boolean
+    allowBurgerChoice?: boolean
+    allowDrinkChoice?: boolean
+    allowMeatType?: boolean
   }>({
     category: "",
     name: "",
@@ -76,6 +82,9 @@ export default function ModificarMenuPage() {
     image: "",
     popular: false,
     includesFries: false,
+    allowBurgerChoice: false,
+    allowDrinkChoice: false,
+    allowMeatType: false,
   })
   
   // Estados para eliminar producto
@@ -388,6 +397,13 @@ export default function ModificarMenuPage() {
       image: newProduct.image || "/placeholder.svg",
       popular: newProduct.popular,
       includesFries: newProduct.includesFries,
+      ...(newProduct.category === "promos" && {
+        allowBurgerChoice: newProduct.allowBurgerChoice || false,
+        allowDrinkChoice: newProduct.allowDrinkChoice || false,
+      }),
+      ...(newProduct.category === "milanesas" && {
+        allowMeatType: newProduct.allowMeatType || false,
+      }),
     }
     
     const updatedMenuData = {
@@ -431,6 +447,9 @@ export default function ModificarMenuPage() {
             image: "",
             popular: false,
             includesFries: false,
+            allowBurgerChoice: false,
+            allowDrinkChoice: false,
+            allowMeatType: false,
           })
           setSaveStatus("idle")
           setCurrentView("menu")
@@ -1080,6 +1099,56 @@ export default function ModificarMenuPage() {
                 </Label>
               </div>
 
+              {/* Opciones específicas para Promos */}
+              {newProduct.category === "promos" && (
+                <div className="space-y-3 pt-2 border-t">
+                  <Label className="text-sm font-semibold">Opciones de Personalización para Promos</Label>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="allowBurgerChoice"
+                      checked={newProduct.allowBurgerChoice || false}
+                      onCheckedChange={(checked) =>
+                        setNewProduct({ ...newProduct, allowBurgerChoice: checked as boolean })
+                      }
+                    />
+                    <Label htmlFor="allowBurgerChoice" className="cursor-pointer text-sm">
+                      Permitir elegir hamburguesa
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="allowDrinkChoice"
+                      checked={newProduct.allowDrinkChoice || false}
+                      onCheckedChange={(checked) =>
+                        setNewProduct({ ...newProduct, allowDrinkChoice: checked as boolean })
+                      }
+                    />
+                    <Label htmlFor="allowDrinkChoice" className="cursor-pointer text-sm">
+                      Permitir elegir bebida
+                    </Label>
+                  </div>
+                </div>
+              )}
+
+              {/* Opciones específicas para Milanesas */}
+              {newProduct.category === "milanesas" && (
+                <div className="space-y-3 pt-2 border-t">
+                  <Label className="text-sm font-semibold">Opciones de Personalización para Milanesas</Label>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="allowMeatType"
+                      checked={newProduct.allowMeatType || false}
+                      onCheckedChange={(checked) =>
+                        setNewProduct({ ...newProduct, allowMeatType: checked as boolean })
+                      }
+                    />
+                    <Label htmlFor="allowMeatType" className="cursor-pointer text-sm">
+                      Permitir elegir tipo de carne (Carne/Pollo)
+                    </Label>
+                  </div>
+                </div>
+              )}
+
               <div className="flex gap-4 pt-4">
                 <Button
                   variant="outline"
@@ -1481,6 +1550,53 @@ export default function ModificarMenuPage() {
                     🍟 Incluye papas fritas gratis
                   </Label>
                 </div>
+
+                {/* Opciones para Promos */}
+                {category === "promos" && (
+                  <>
+                    <div className="flex items-center space-x-2 border-t pt-3">
+                      <Checkbox
+                        id={`burger-choice-${item.id}`}
+                        checked={item.allowBurgerChoice || false}
+                        onCheckedChange={(checked) =>
+                          handleFieldChange(category, item.id, 'allowBurgerChoice', checked as boolean)
+                        }
+                      />
+                      <Label htmlFor={`burger-choice-${item.id}`} className="cursor-pointer text-sm">
+                        Permitir elegir hamburguesa
+                      </Label>
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`drink-choice-${item.id}`}
+                        checked={item.allowDrinkChoice || false}
+                        onCheckedChange={(checked) =>
+                          handleFieldChange(category, item.id, 'allowDrinkChoice', checked as boolean)
+                        }
+                      />
+                      <Label htmlFor={`drink-choice-${item.id}`} className="cursor-pointer text-sm">
+                        Permitir elegir bebida
+                      </Label>
+                    </div>
+                  </>
+                )}
+
+                {/* Opciones para Milanesas */}
+                {category === "milanesas" && (
+                  <div className="flex items-center space-x-2 border-t pt-3">
+                    <Checkbox
+                      id={`meat-type-${item.id}`}
+                      checked={item.allowMeatType || false}
+                      onCheckedChange={(checked) =>
+                        handleFieldChange(category, item.id, 'allowMeatType', checked as boolean)
+                      }
+                    />
+                    <Label htmlFor={`meat-type-${item.id}`} className="cursor-pointer text-sm">
+                      Permitir elegir tipo de carne (Carne/Pollo)
+                    </Label>
+                  </div>
+                )}
               </div>
             </div>
           </CardContent>
