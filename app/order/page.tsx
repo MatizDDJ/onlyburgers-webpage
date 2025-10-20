@@ -302,7 +302,7 @@ export default function OrderPage() {
                 <CardFooter className="flex-col gap-3">
                   {!storeOpen && (
                     <p className="text-sm text-orange-600 font-medium text-center">
-                      😴 No se pueden hacer pedidos cuando estamos cerrados
+                       No se pueden hacer pedidos cuando estamos cerrados
                     </p>
                   )}
                   {!isFormValid && storeOpen && (

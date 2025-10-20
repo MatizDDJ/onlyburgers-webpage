@@ -75,7 +75,7 @@ export function Header() {
             <SheetContent side="right" className="w-[280px] sm:w-[350px] p-0">
               <div className="flex flex-col h-full">
                 {/* Header del menú */}
-                <SheetHeader className="p-6 pb-4 border-b">
+                <SheetHeader className="p-6 pb-6 pt-8 border-b">
                   <SheetTitle className="text-2xl font-bold text-primary font-[family-name:var(--font-display)] text-left">
                     ONLY BURGUERS
                   </SheetTitle>
@@ -85,25 +85,25 @@ export function Header() {
                 </SheetHeader>
 
                 {/* Navegación */}
-                <nav className="flex-1 px-6 py-6">
-                  <div className="flex flex-col gap-2">
+                <nav className="flex-1 px-6 py-8">
+                  <div className="flex flex-col gap-3">
                     <Link 
                       href="/menu" 
-                      className="text-base font-medium hover:text-primary transition-colors py-3 px-4 rounded-lg hover:bg-secondary/50"
+                      className="text-lg font-medium hover:text-primary transition-colors py-3 px-4 rounded-lg hover:bg-secondary/50"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Menú Completo
                     </Link>
                     <Link 
                       href="/#about" 
-                      className="text-base font-medium hover:text-primary transition-colors py-3 px-4 rounded-lg hover:bg-secondary/50"
+                      className="text-lg font-medium hover:text-primary transition-colors py-3 px-4 rounded-lg hover:bg-secondary/50"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Nosotros
                     </Link>
                     <Link 
                       href="/#contact" 
-                      className="text-base font-medium hover:text-primary transition-colors py-3 px-4 rounded-lg hover:bg-secondary/50"
+                      className="text-lg font-medium hover:text-primary transition-colors py-3 px-4 rounded-lg hover:bg-secondary/50"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Contacto

@@ -59,7 +59,7 @@ export function BusinessHoursBanner() {
             )}
           </>
         ) : (
-          "😴 Estamos cerrados temporalmente"
+          " Estamos cerrados temporalmente"
         )}
       </AlertDescription>
     </Alert>

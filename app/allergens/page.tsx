@@ -9,7 +9,7 @@ export default function AllergensPage() {
   return (
     <main className="min-h-screen w-full">
       <Header />
-      <div className="pt-16">
+      <div className="pt-20">
         <div className="py-12 md:py-20 bg-secondary/20">
           <div className="container mx-auto px-4 max-w-4xl">
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-8 font-[family-name:var(--font-display)]">

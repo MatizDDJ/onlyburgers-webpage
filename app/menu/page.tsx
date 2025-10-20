@@ -9,7 +9,7 @@ export default function MenuPage() {
   return (
     <main className="min-h-screen w-full">
       <Header />
-      <div className="pt-16">
+      <div className="pt-20">
         <div className="container mx-auto px-4 max-w-7xl py-6">
           <BusinessHoursBanner />
         </div>
