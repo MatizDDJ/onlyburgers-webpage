@@ -1,0 +1,31 @@
+# Archivos y carpetas a ignorar en el deploy de Vercel
+
+# Archivos de desarrollo
+.env.local
+.env.example
+*.log
+npm-debug.log*
+
+# Cache de Next.js
+.next/
+out/
+
+# Dependencias
+node_modules/
+
+# Archivos de desarrollo no necesarios
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Tests (si los hubiera)
+__tests__/
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+
+# Documentación de desarrollo (estos SÍ queremos incluirlos)
+# public/*.html se incluye automáticamente
