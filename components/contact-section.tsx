@@ -7,7 +7,7 @@ import { useIntersectionObserver } from "@/hooks/use-intersection-observer"
 import { useEffect, useState } from "react"
 
 export function ContactSection() {
-  const whatsappNumber = "598098190425" // Replace with actual number
+  const whatsappNumber = "598092469883" // Replace with actual number
   const whatsappMessage = encodeURIComponent(
     "¡Hola ONLY BURGUERS! Me gustaría hacer una consulta sobre sus hamburguesas.",
   )
@@ -80,7 +80,7 @@ export function ContactSection() {
               </div>
               <h3 className="font-semibold text-lg">WhatsApp</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                +598 98 190 425
+                +598 92 469 883
                 <br />
                 Pedidos y consultas
               </p>

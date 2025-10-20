@@ -34,7 +34,7 @@ export default function TermsPage() {
                 </CardHeader>
                 <CardContent className="prose prose-sm max-w-none">
                   <p>
-                    Todos los pedidos deben realizarse a través de WhatsApp al +598 98 190 425.
+                    Todos los pedidos deben realizarse a través de WhatsApp al +598 92 469 883.
                   </p>
                   <ul className="list-disc pl-6 space-y-2 mt-4">
                     <li><strong>Métodos de pago aceptados:</strong> Efectivo y transferencia bancaria</li>
@@ -180,7 +180,7 @@ export default function TermsPage() {
                     Para cualquier consulta sobre estos términos y condiciones:
                   </p>
                   <ul className="list-none space-y-2 mt-4">
-                    <li><strong>WhatsApp:</strong> +598 98 190 425</li>
+                    <li><strong>WhatsApp:</strong> +598 92 469 883</li>
                     <li><strong>Ubicación:</strong> Colonia, Uruguay - Zona Centro</li>
                     <li><strong>Horario de atención:</strong> Lunes a Domingo, 20:00 - 01:00 hs</li>
                   </ul>

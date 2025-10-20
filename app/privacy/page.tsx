@@ -88,7 +88,7 @@ export default function PrivacyPage() {
                     <li>Oponerte al procesamiento de tus datos</li>
                   </ul>
                   <p className="mt-4">
-                    Para ejercer estos derechos, contactanos a través de WhatsApp: +598 98 190 425
+                    Para ejercer estos derechos, contactanos a través de WhatsApp: +598 92 469 883
                   </p>
                 </CardContent>
               </Card>
@@ -114,7 +114,7 @@ export default function PrivacyPage() {
                     Si tenés preguntas sobre nuestra política de privacidad, podés contactarnos:
                   </p>
                   <ul className="list-none space-y-2 mt-4">
-                    <li><strong>WhatsApp:</strong> +598 98 190 425</li>
+                    <li><strong>WhatsApp:</strong> +598 92 469 883</li>
                     <li><strong>Ubicación:</strong> Colonia, Uruguay - Zona Centro</li>
                   </ul>
                 </CardContent>

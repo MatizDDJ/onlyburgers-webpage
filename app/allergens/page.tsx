@@ -163,7 +163,7 @@ export default function AllergensPage() {
                       <strong>Sin huevo:</strong> Podemos evitar salsas con huevo según tu preferencia.
                     </p>
                     <p className="mt-4 font-semibold">
-                      Consultanos por WhatsApp (+598 98 190 425) para personalizar tu pedido según tus necesidades.
+                      Consultanos por WhatsApp (+598 92 469 883) para personalizar tu pedido según tus necesidades.
                     </p>
                   </div>
                 </CardContent>
@@ -178,7 +178,7 @@ export default function AllergensPage() {
                     Para obtener información detallada sobre ingredientes específicos de cualquier producto:
                   </p>
                   <ul className="list-none space-y-2 text-sm">
-                    <li><strong>WhatsApp:</strong> +598 98 190 425</li>
+                    <li><strong>WhatsApp:</strong> +598 92 469 883</li>
                     <li><strong>Horario:</strong> Lunes a Domingo, 20:00 - 01:00 hs</li>
                   </ul>
                 </CardContent>
