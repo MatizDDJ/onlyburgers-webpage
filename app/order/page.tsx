@@ -11,7 +11,9 @@ import { Separator } from "@/components/ui/separator"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft, MessageCircle, CreditCard, Banknote } from "lucide-react"
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { BusinessHoursBanner } from "@/components/business-hours-banner"
+import { isOpen } from "@/lib/business-hours"
 
 export default function OrderPage() {
   const { items, updateQuantity, removeItem, total } = useCart()
@@ -21,6 +23,17 @@ export default function OrderPage() {
     address: "",
   })
   const [paymentMethod, setPaymentMethod] = useState<"efectivo" | "transferencia">("efectivo")
+  const [storeOpen, setStoreOpen] = useState(true)
+
+  useEffect(() => {
+    setStoreOpen(isOpen())
+    
+    const interval = setInterval(() => {
+      setStoreOpen(isOpen())
+    }, 60000) // Verificar cada minuto
+    
+    return () => clearInterval(interval)
+  }, [])
 
   const grandTotal = total 
 
@@ -93,6 +106,8 @@ export default function OrderPage() {
       <Header />
       <div className="flex-1 py-8 md:py-12 bg-secondary/20 pt-24">
         <div className="container px-4">
+          <BusinessHoursBanner />
+          
           <div className="mb-6">
             <Link
               href="/#menu"
@@ -285,23 +300,28 @@ export default function OrderPage() {
                   </div>
                 </CardContent>
                 <CardFooter className="flex-col gap-3">
-                  {!isFormValid && (
+                  {!storeOpen && (
+                    <p className="text-sm text-orange-600 font-medium text-center">
+                      😴 No se pueden hacer pedidos cuando estamos cerrados
+                    </p>
+                  )}
+                  {!isFormValid && storeOpen && (
                     <p className="text-sm text-muted-foreground text-center">
                       Completa todos los campos para continuar
                     </p>
                   )}
                   <a
-                    href={isFormValid ? whatsappLink : undefined}
+                    href={isFormValid && storeOpen ? whatsappLink : undefined}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full"
                     onClick={(e) => {
-                      if (!isFormValid) {
+                      if (!isFormValid || !storeOpen) {
                         e.preventDefault()
                       }
                     }}
                   >
-                    <Button className="w-full" size="lg" disabled={!isFormValid}>
+                    <Button className="w-full" size="lg" disabled={!isFormValid || !storeOpen}>
                       <MessageCircle className="mr-2 h-5 w-5" />
                       Enviar Pedido por WhatsApp
                     </Button>

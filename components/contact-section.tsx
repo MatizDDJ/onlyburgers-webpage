@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { MapPin, Clock, MessageCircle } from "lucide-react"
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer"
 import { useEffect, useState } from "react"
+import { isOpen as checkIsOpen, type BusinessHoursObject } from "@/lib/business-hours"
 
 export function ContactSection() {
   const whatsappNumber = "598092469883" // Replace with actual number
@@ -17,19 +18,59 @@ export function ContactSection() {
   const { elementRef: cardsRef, isVisible: cardsVisible } = useIntersectionObserver({ threshold: 0.1 })
   const { elementRef: buttonRef, isVisible: buttonVisible } = useIntersectionObserver({ threshold: 0.2 })
 
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState<boolean | null>(null)
+  const [scheduleText, setScheduleText] = useState<string>("Cargando...")
 
-  // Verificar si el restaurante está abierto (20:00 a 01:00)
+  // Verificar si el restaurante está abierto y obtener texto del horario
   useEffect(() => {
-    const checkIfOpen = () => {
-      const now = new Date()
-      const hour = now.getHours()
-      const open = hour >= 20 || hour < 1
-      setIsOpen(open)
+    const updateStatus = () => {
+      setIsOpen(checkIsOpen())
+      
+      // Obtener horarios desde localStorage
+      const storedHours = localStorage.getItem('business_hours')
+      if (storedHours) {
+        try {
+          const hours: BusinessHoursObject = JSON.parse(storedHours)
+          
+          // Verificar si todos los días tienen el mismo horario
+          const allSame = Object.values(hours).every((day, i, arr) => 
+            i === 0 || (
+              day.open === arr[0].open && 
+              day.close === arr[0].close && 
+              day.closed === arr[0].closed
+            )
+          )
+          
+          if (allSame && !Object.values(hours)[0].closed) {
+            // Todos los días igual
+            const firstDay = Object.values(hours)[0]
+            setScheduleText(`Lun-Dom\n${firstDay.open} - ${firstDay.close}`)
+          } else {
+            // Horarios diferentes - mostrar rango general
+            const openDays = Object.entries(hours).filter(([_, day]) => !day.closed)
+            if (openDays.length > 0) {
+              const dayNames: { [key: string]: string } = {
+                monday: "Lun", tuesday: "Mar", wednesday: "Mié",
+                thursday: "Jue", friday: "Vie", saturday: "Sáb", sunday: "Dom"
+              }
+              const firstOpen = openDays[0][1]
+              setScheduleText(`Ver horarios\n${firstOpen.open} - ${firstOpen.close}`)
+            } else {
+              setScheduleText("Cerrado\ntodos los días")
+            }
+          }
+        } catch (error) {
+          console.error('Error parsing hours:', error)
+          setScheduleText("Lun-Dom\n11:00 - 23:00")
+        }
+      } else {
+        // Horarios por defecto
+        setScheduleText("Lun-Dom\n11:00 - 23:00")
+      }
     }
 
-    checkIfOpen()
-    const interval = setInterval(checkIfOpen, 60000)
+    updateStatus()
+    const interval = setInterval(updateStatus, 60000)
 
     return () => clearInterval(interval)
   }, [])
@@ -95,17 +136,17 @@ export function ContactSection() {
                 <Clock className="h-6 w-6 text-primary" />
               </div>
               <h3 className="font-semibold text-lg">Horario</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Lun-Dom
-                <br />
-                20:00 PM - 01:00 AM
+              <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
+                {scheduleText}
               </p>
-              <div className="flex items-center justify-center gap-2 mt-3">
-                <div className={`w-2 h-2 rounded-full ${isOpen ? 'bg-green-500' : 'bg-red-500'}`} />
-                <span className={`text-xs font-semibold ${isOpen ? 'text-green-600' : 'text-red-600'}`}>
-                  {isOpen ? 'Abierto ahora' : 'Cerrado ahora'}
-                </span>
-              </div>
+              {isOpen !== null && (
+                <div className="flex items-center justify-center gap-2 mt-3">
+                  <div className={`w-2 h-2 rounded-full ${isOpen ? 'bg-green-500' : 'bg-red-500'}`} />
+                  <span className={`text-xs font-semibold ${isOpen ? 'text-green-600' : 'text-red-600'}`}>
+                    {isOpen ? 'Abierto ahora' : 'Cerrado ahora'}
+                  </span>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

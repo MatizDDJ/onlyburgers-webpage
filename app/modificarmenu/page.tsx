@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Lock, Save, Loader2, CheckCircle, XCircle, Shield, Plus, Trash2, Edit, ArrowLeft, Upload, Check } from "lucide-react"
+import { Lock, Save, Loader2, CheckCircle, XCircle, Shield, Plus, Trash2, Edit, ArrowLeft, Upload, Check, Clock } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import {
   Select,
@@ -47,7 +47,7 @@ interface MenuData {
   promos: MenuItem[]
 }
 
-type AdminView = "menu" | "add" | "delete" | "edit"
+type AdminView = "menu" | "add" | "delete" | "edit" | "hours"
 
 export default function ModificarMenuPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -91,6 +91,19 @@ export default function ModificarMenuPage() {
   // Estado para overlay de confirmación
   const [showSuccessOverlay, setShowSuccessOverlay] = useState(false)
   const [successMessage, setSuccessMessage] = useState("")
+  
+  // Estados para horarios
+  const [businessHours, setBusinessHours] = useState<{
+    [key: string]: { open: string; close: string; closed: boolean }
+  }>({
+    monday: { open: "11:00", close: "23:00", closed: false },
+    tuesday: { open: "11:00", close: "23:00", closed: false },
+    wednesday: { open: "11:00", close: "23:00", closed: false },
+    thursday: { open: "11:00", close: "23:00", closed: false },
+    friday: { open: "11:00", close: "00:00", closed: false },
+    saturday: { open: "11:00", close: "00:00", closed: false },
+    sunday: { open: "11:00", close: "23:00", closed: false },
+  })
 
   useEffect(() => {
     // Verificar si hay token guardado en localStorage
@@ -99,6 +112,16 @@ export default function ModificarMenuPage() {
       setAuthToken(savedToken)
       setIsAuthenticated(true)
       fetchMenu()
+    }
+    
+    // Cargar horarios desde localStorage
+    const savedHours = localStorage.getItem('business_hours')
+    if (savedHours) {
+      try {
+        setBusinessHours(JSON.parse(savedHours))
+      } catch (error) {
+        console.error('Error loading business hours:', error)
+      }
     }
   }, [])
 
@@ -120,6 +143,31 @@ export default function ModificarMenuPage() {
     } finally {
       setLoading(false)
     }
+  }
+  
+  const handleSaveBusinessHours = () => {
+    try {
+      localStorage.setItem('business_hours', JSON.stringify(businessHours))
+      setSuccessMessage("¡Horarios actualizados correctamente!")
+      setShowSuccessOverlay(true)
+      setTimeout(() => {
+        setShowSuccessOverlay(false)
+        setCurrentView("menu")
+      }, 3000)
+    } catch (error) {
+      console.error('Error saving business hours:', error)
+      setErrorMessage('Error al guardar los horarios')
+    }
+  }
+  
+  const updateDayHours = (day: string, field: 'open' | 'close' | 'closed', value: string | boolean) => {
+    setBusinessHours(prev => ({
+      ...prev,
+      [day]: {
+        ...prev[day],
+        [field]: value
+      }
+    }))
   }
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -579,6 +627,149 @@ export default function ModificarMenuPage() {
     )
   }
 
+  // Vista de horarios (no necesita menuData)
+  if (currentView === "hours") {
+    const daysInSpanish: { [key: string]: string } = {
+      monday: "Lunes",
+      tuesday: "Martes",
+      wednesday: "Miércoles",
+      thursday: "Jueves",
+      friday: "Viernes",
+      saturday: "Sábado",
+      sunday: "Domingo"
+    }
+    
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-background to-secondary/30 py-8">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <Button
+            variant="ghost"
+            onClick={() => setCurrentView("menu")}
+            className="mb-6"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Volver
+          </Button>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl">Gestionar Horarios</CardTitle>
+              <CardDescription>
+                Configura los horarios de apertura y cierre para cada día de la semana
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {errorMessage && (
+                <Alert variant="destructive">
+                  <XCircle className="h-4 w-4" />
+                  <AlertDescription>{errorMessage}</AlertDescription>
+                </Alert>
+              )}
+
+              <div className="space-y-4">
+                {Object.entries(businessHours).map(([day, hours]) => (
+                  <Card key={day} className="border-2">
+                    <CardContent className="pt-6">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                        <div className="flex items-center space-x-3 min-w-[150px]">
+                          <Checkbox
+                            id={`${day}-closed`}
+                            checked={!hours.closed}
+                            onCheckedChange={(checked) => 
+                              updateDayHours(day, 'closed', !checked)
+                            }
+                          />
+                          <Label
+                            htmlFor={`${day}-closed`}
+                            className="text-base font-semibold cursor-pointer"
+                          >
+                            {daysInSpanish[day]}
+                          </Label>
+                        </div>
+
+                        {!hours.closed ? (
+                          <div className="flex items-center gap-3 flex-1">
+                            <div className="flex-1">
+                              <Label htmlFor={`${day}-open`} className="text-sm text-muted-foreground">
+                                Apertura
+                              </Label>
+                              <Input
+                                id={`${day}-open`}
+                                type="time"
+                                value={hours.open}
+                                onChange={(e) => updateDayHours(day, 'open', e.target.value)}
+                                className="mt-1"
+                              />
+                            </div>
+                            <span className="text-muted-foreground pt-6">-</span>
+                            <div className="flex-1">
+                              <Label htmlFor={`${day}-close`} className="text-sm text-muted-foreground">
+                                Cierre
+                              </Label>
+                              <Input
+                                id={`${day}-close`}
+                                type="time"
+                                value={hours.close}
+                                onChange={(e) => updateDayHours(day, 'close', e.target.value)}
+                                className="mt-1"
+                              />
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="flex-1">
+                            <Badge variant="secondary" className="text-sm">
+                              Cerrado
+                            </Badge>
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+
+              <div className="flex justify-end pt-4">
+                <Button
+                  onClick={handleSaveBusinessHours}
+                  disabled={loading}
+                  size="lg"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                      Guardando...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-5 w-5 mr-2" />
+                      Guardar Horarios
+                    </>
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Overlay de éxito */}
+        {showSuccessOverlay && (
+          <div className="fixed inset-0 z-[10002] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+            <div className="flex flex-col items-center gap-4 animate-in zoom-in-95 duration-500">
+              <div className="bg-green-600 rounded-full p-6 shadow-2xl animate-in zoom-in-50 duration-700">
+                <Check className="h-20 w-20 md:h-24 md:w-24 text-white animate-in zoom-in-0 duration-500 delay-200" strokeWidth={3} />
+              </div>
+              <div className="bg-background/95 backdrop-blur-sm rounded-lg px-8 py-4 shadow-xl animate-in slide-in-from-bottom-4 duration-500 delay-300">
+                <p className="text-xl md:text-2xl font-bold text-center text-foreground">
+                  {successMessage}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+
   if (!menuData) return null
 
   // Vista de menú principal
@@ -651,6 +842,21 @@ export default function ModificarMenuPage() {
                 <CardTitle className="text-xl">Modificar Precios</CardTitle>
                 <CardDescription>
                   Editar precios de productos existentes
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card
+              className="cursor-pointer hover:shadow-lg transition-shadow"
+              onClick={() => setCurrentView("hours")}
+            >
+              <CardHeader className="text-center">
+                <div className="mx-auto w-16 h-16 bg-purple-100 dark:bg-purple-950 rounded-full flex items-center justify-center mb-4">
+                  <Clock className="h-8 w-8 text-purple-600 dark:text-purple-400" />
+                </div>
+                <CardTitle className="text-xl">Horarios</CardTitle>
+                <CardDescription>
+                  Gestionar horarios de apertura y cierre
                 </CardDescription>
               </CardHeader>
             </Card>
